@@ -167,7 +167,7 @@ extern "C" void ota_flash_init(void);
 #include "watchdog/watchdog.h"
 #include "app_tota.h"
 
-#ifdef __STDF__
+#if defined(__STDF__)
 #include "stdf.h"
 #endif
 
@@ -2216,10 +2216,14 @@ exit:
 #endif
 
 #if defined(SIMPLE_TEST_UI)
+#if defined(__STDF__)
+    app_ibrt_if_enter_freeman_pairing();
+#else
     app_ibrt_if_enter_pairing_after_tws_connected();
 #endif
+#endif
 
-#ifdef __STDF__
+#if defined(__STDF__)
     stdf_init();
 #endif
     
