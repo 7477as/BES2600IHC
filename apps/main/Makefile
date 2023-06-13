@@ -163,7 +163,3 @@ endif
 ifeq ($(VOICE_ASSIST_NOISE_ADAPT_ANC_ENABLED),1)
 CFLAGS_apps.o += -DVOICE_ASSIST_NOISE_ADAPT_ANC_ENABLED
 endif
-
-#ifeq ($(__STDF__),1)
-asubdir-ccflags-y += -Istdf/stdf_main
-#endif

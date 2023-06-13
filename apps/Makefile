@@ -56,3 +56,7 @@ endif
 ifeq ($(A2DP_LDAC_ON),1)
 subdir-ccflags-y += -Ithirdparty/audio_codec_lib/ldac/inc
 endif
+
+ifeq ($(__STDF__),1)
+subdir-ccflags-y += -Istdf/stdf_main
+endif
