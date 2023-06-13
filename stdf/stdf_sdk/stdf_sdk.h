@@ -13,8 +13,8 @@
  * trademark and other intellectual property rights.
  *
  ****************************************************************************/
-#ifndef __STDF_OS_H__
-#define __STDF_OS_H__
+#ifndef __STDF_SDK_H__
+#define __STDF_SDK_H__
 
 #include "plat_types.h"
 
@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-void stdf_sdk_init(void)
+void stdf_sdk_init(void);
 
 #ifdef __cplusplus
 }

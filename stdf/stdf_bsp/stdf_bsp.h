@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-void stdf_bsp_init(void)
+void stdf_bsp_init(void);
 
 #ifdef __cplusplus
 }

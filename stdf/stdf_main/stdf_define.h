@@ -13,19 +13,18 @@
  * trademark and other intellectual property rights.
  *
  ****************************************************************************/
-#ifndef __STDF_OS_H__
-#define __STDF_OS_H__
+#ifndef __STDF_DEFINE_H__
+#define __STDF_DEFINE_H__
 
-#include "plat_types.h"
+#include "hal_trace.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// Definitions for debug
+#define STDF_LOG(str, ...)             TRACE(0, "[STDF]%s "str, ##__VA_ARGS__)
+#define STDF_DUMP8(str, buf, cnt)      DUMP8(str, buf, cnt)
+#define STDF_ASSERT(cond)              ASSERT(cond, "[STDF][ASSERT] %s line %d", __func__, __LINE__)
 
-void stdf_os_init(void);
-
-#ifdef __cplusplus
-}
-#endif
+//#define A_A2DP_LOG(str, ...)         TRACE(1, "[A_A2DP]%s "str, __func__,##__VA_ARGS__)
+//#define	A_A2DP_DUMP8(str,buf,cnt)    DUMP8(str, buf, cnt)
+//ASSERT(0, "ASSERT  %s %d", __func__, __LINE__);
 
 #endif

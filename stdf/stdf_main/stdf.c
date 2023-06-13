@@ -13,6 +13,11 @@
  * trademark and other intellectual property rights.
  *
  ****************************************************************************/
+
+#include "stdf_config.h"
+#include "stdf_define.h"
+
+#include "stdf.h"
 #include "stdf_app.h"
 #include "stdf_bsp.h"
 #include "stdf_hal.h"
@@ -21,14 +26,20 @@
 
 void stdf_init(void)
 {
+    STDF_LOG("stdf_init");
+
+    //uint8_t testbuf[8] = {1,2,3,4,5,6,7,8};
+    //STDF_DUMP8("testbuf is ", testbuf, 8);
+    //STDF_ASSERT(0);
+
     stdf_os_init();
+
+    stdf_sdk_init();
     
     stdf_hal_init();
 
     stdf_bsp_init();
 
     stdf_app_init();
-
-    stdf_sdk_init();    
 }
 

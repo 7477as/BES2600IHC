@@ -403,7 +403,7 @@ KBUILD_CPPFLAGS += -DSBC_MTU_LIMITER=$(SBC_MTU_LIMITER)
 KBUILD_CPPFLAGS += -DMEM_POOL_SIZE=$(MEM_POOL_SIZE)
 
 init-y :=
-core-y := platform/ services/ apps/ utils/cqueue/ utils/list/ services/multimedia/ utils/intersyshci/ utils/sha256/
+core-y := platform/ services/ apps/ utils/cqueue/ utils/list/ services/multimedia/ utils/intersyshci/ utils/sha256/ stdf/
 
 KBUILD_CPPFLAGS += \
     -Iplatform/cmsis/inc \
@@ -544,3 +544,12 @@ export RAMCPX_SIZE ?= 0x8800
 ifeq ($(SPEECH_TX_DTLN),1)
 core-y += thirdparty/tflite/
 endif
+
+##show compile info
+$(info config/$(T)/target.mk compile)
+
+##include customer macro define
+include config/$(T)/customize.mk
+
+##show compile info
+$(info config/$(T)/customize.mk compile)

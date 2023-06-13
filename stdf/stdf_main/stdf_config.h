@@ -13,19 +13,10 @@
  * trademark and other intellectual property rights.
  *
  ****************************************************************************/
-#ifndef __STDF_OS_H__
-#define __STDF_OS_H__
+#ifndef __STDF_CONFIG_H__
+#define __STDF_CONFIG_H__
 
-#include "plat_types.h"
+// config only talk
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void stdf_os_init(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

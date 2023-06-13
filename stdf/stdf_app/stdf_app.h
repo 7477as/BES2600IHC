@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-void stdf_app_init(void)
+void stdf_app_init(void);
 
 #ifdef __cplusplus
 }

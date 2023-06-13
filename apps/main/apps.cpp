@@ -167,6 +167,10 @@ extern "C" void ota_flash_init(void);
 #include "watchdog/watchdog.h"
 #include "app_tota.h"
 
+#ifdef __STDF__
+#include "stdf.h"
+#endif
+
 #ifdef APP_TRACE_RX_ENABLE
 extern "C"  void app_trace_rx_open(void);
 #endif
@@ -2213,7 +2217,12 @@ exit:
 
 #if defined(SIMPLE_TEST_UI)
     app_ibrt_if_enter_pairing_after_tws_connected();
-#endif	
+#endif
+
+#ifdef __STDF__
+    stdf_init();
+#endif
+    
     app_sysfreq_req(APP_SYSFREQ_USER_APP_INIT, APP_SYSFREQ_32K);
 
     return nRet;
