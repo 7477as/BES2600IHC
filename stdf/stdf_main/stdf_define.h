@@ -19,7 +19,7 @@
 #include "hal_trace.h"
 
 // Definitions for debug
-#define STDF_LOG(str, ...)             TRACE(0, "[STDF]%s "str, ##__VA_ARGS__)
+#define STDF_LOG(str, ...)             TRACE(0, "[STDF] "str, ##__VA_ARGS__)
 #define STDF_DUMP8(str, buf, cnt)      DUMP8(str, buf, cnt)
 #define STDF_ASSERT(cond)              ASSERT(cond, "[STDF][ASSERT] %s line %d", __func__, __LINE__)
 
