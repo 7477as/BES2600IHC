@@ -19,7 +19,6 @@
 
 #include "stdf_define.h"
 
-
 #define STDF_OS_LOG(str, ...)               STDF_LOG("[OS] %s "str, __func__, ##__VA_ARGS__)
 #define STDF_OS_ASSERT(cond)                STDF_ASSERT(cond)
 
@@ -27,6 +26,6 @@ void stdf_os_init(void)
 {
     STDF_OS_LOG("");
 
-    stdf_os_msg_init();   
+    stdf_os_msg_init();
 }
 

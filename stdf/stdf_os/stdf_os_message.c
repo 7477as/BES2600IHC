@@ -122,7 +122,7 @@ static  void stdf_os_msg_timer_start(void)
         uint32_t run_time = stdf_os_msg_data[min_run_time_index].run_time;
     
         STDF_OS_MSG_LOG("func %p msg_id %d payload %p, run_time %d current_ms %d", 
-                     handler, msg_id, payload, run_time, current_ms);
+                        handler, msg_id, payload, run_time, current_ms);
         
         // check if the time is too late to call handle
         if(run_time <= current_ms)
@@ -142,8 +142,13 @@ static  void stdf_os_msg_timer_start(void)
     }
     else
     {
-        STDF_OS_MSG_LOG("table is empty");
+        STDF_OS_MSG_LOG("message is empty");
     }
+}
+
+static bool stdf_os_msg_timer_is_run(void)
+{
+    return (bool)osTimerIsRunning(stdf_os_msg_timer);
 }
 
 static void stdf_os_msg_timer_stop(void)
@@ -215,7 +220,12 @@ static void stdf_os_msg_timer_timeout(void)
     while(index < STDF_OS_MSG_MAX_NUM);
    
     // check if the message table has message to delay send or not
-    stdf_os_msg_timer_start();
+    STDF_OS_MSG_ENTER_CRITICAL();
+    if(!stdf_os_msg_timer_is_run())
+    {
+        stdf_os_msg_timer_start();
+    }
+    STDF_OS_MSG_EXIT_CRITICAL();
 }
 
 static void stdf_os_msg_timer_handler(const void *param)
@@ -225,8 +235,8 @@ static void stdf_os_msg_timer_handler(const void *param)
 osTimerDef (STDF_OS_MSG_TIMER, stdf_os_msg_timer_handler);
 
 static void stdf_os_msg_add(stdf_os_msg_handler_t handler, 
-                                stdf_os_msg_id_t msg_id, 
-                                void *payload, uint32_t delay)
+                            stdf_os_msg_id_t msg_id, 
+                            void *payload, uint32_t delay)
 {
     uint8_t index;
     
@@ -241,26 +251,26 @@ static void stdf_os_msg_add(stdf_os_msg_handler_t handler,
     if(index < STDF_OS_MSG_MAX_NUM)
     {
         STDF_OS_MSG_LOG("success, index %d handler %p msg_id %d delay %u", 
-                    index, handler, msg_id, delay);
+                        index, handler, msg_id, delay);
         
+        stdf_os_msg_timer_stop();
         uint32_t current_ms = GET_CURRENT_MS();
         stdf_os_msg_data[index].used     = true;      
         stdf_os_msg_data[index].handler  = handler;
         stdf_os_msg_data[index].msg_id   = msg_id;
         stdf_os_msg_data[index].payload  = payload;
         stdf_os_msg_data[index].run_time = current_ms + delay;
-
         stdf_os_msg_timer_start();
     }
     else
     {
         STDF_OS_MSG_LOG("fail, index %d handler %p msg_id %d delay %u", 
-                    index, handler, msg_id, delay);
+                        index, handler, msg_id, delay);
     }
 }
 
 static bool stdf_os_msg_delate_first(stdf_os_msg_handler_t handler, 
-                                         stdf_os_msg_id_t msg_id)
+                                     stdf_os_msg_id_t msg_id)
 {
     uint8_t index;
     uint32_t min_run_time = STDF_OS_MSG_DELAY_FOREVER;
@@ -285,7 +295,7 @@ static bool stdf_os_msg_delate_first(stdf_os_msg_handler_t handler,
     if(min_run_time_index < STDF_OS_MSG_MAX_NUM)
     {
         STDF_OS_MSG_LOG("success, index %d handler %p msg_id %d delay %u", 
-                    min_run_time_index, handler, msg_id);
+                        min_run_time_index, handler, msg_id);
         
         if(stdf_os_msg_get_latest() == min_run_time_index)
         {
@@ -308,8 +318,8 @@ static bool stdf_os_msg_delate_first(stdf_os_msg_handler_t handler,
  * ---------------------------------------------------------------------------*/
 
 void stdf_os_msg_send(stdf_os_msg_handler_t handler, 
-                          stdf_os_msg_id_t msg_id, 
-                          void *payload)
+                      stdf_os_msg_id_t msg_id, 
+                      void *payload)
 {
     STDF_OS_MSG_ENTER_CRITICAL();
     stdf_os_msg_add(handler, msg_id, payload, STDF_OS_MSG_IMMEDIATELY);
@@ -317,9 +327,9 @@ void stdf_os_msg_send(stdf_os_msg_handler_t handler,
 }
 
 void stdf_os_msg_send_later(stdf_os_msg_handler_t handler, 
-                                stdf_os_msg_id_t msg_id, 
-                                void *payload, 
-                                uint32_t delay)
+                            stdf_os_msg_id_t msg_id, 
+                            void *payload, 
+                            uint32_t delay)
 {
     STDF_OS_MSG_ENTER_CRITICAL();
     stdf_os_msg_add(handler, msg_id, payload, delay);
@@ -327,7 +337,7 @@ void stdf_os_msg_send_later(stdf_os_msg_handler_t handler,
 }
 
 uint16_t stdf_os_msg_get_count(stdf_os_msg_handler_t handler, 
-                                                   stdf_os_msg_id_t msg_id)
+                               stdf_os_msg_id_t msg_id)
 {
     uint16_t count = 0; 
 
@@ -346,7 +356,7 @@ uint16_t stdf_os_msg_get_count(stdf_os_msg_handler_t handler,
 }
 
 bool stdf_os_msg_cancel_first(stdf_os_msg_handler_t handler, 
-                                  stdf_os_msg_id_t msg_id)
+                              stdf_os_msg_id_t msg_id)
 {
     bool result;
     
@@ -358,7 +368,7 @@ bool stdf_os_msg_cancel_first(stdf_os_msg_handler_t handler,
 }
 
 uint16_t stdf_os_msg_cancel_all(stdf_os_msg_handler_t handler, 
-                                    stdf_os_msg_id_t msg_id)
+                                stdf_os_msg_id_t msg_id)
 {
     uint16_t count = 0;
     
@@ -389,9 +399,9 @@ void stdf_os_msg_init(void)
         stdf_os_msg_data[index].msg_id   = STDF_OS_MSG_ID_INVALID;
         stdf_os_msg_data[index].payload  = NULL;
         stdf_os_msg_data[index].run_time = STDF_OS_MSG_DELAY_FOREVER;
-    }	
+    }
 
-	// create timer
+    // create timer
     if(stdf_os_msg_timer == NULL) 
     {
         stdf_os_msg_timer = osTimerCreate(osTimer(STDF_OS_MSG_TIMER), osTimerOnce, NULL);
@@ -399,4 +409,5 @@ void stdf_os_msg_init(void)
 
     // create mutex
     stdf_os_msg_mutex_id = osMutexCreate((osMutex(STDF_OS_MSG_MUTEX)));
+}
 
