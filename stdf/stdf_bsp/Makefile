@@ -1,3 +1,4 @@
+
 cur_dir := $(dir $(lastword $(MAKEFILE_LIST)))
 
 obj_s := $(patsubst $(cur_dir)%,%,$(wildcard $(cur_dir)*.s))

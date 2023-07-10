@@ -1,26 +1,59 @@
- /***************************************************************************
- *
- * Copyright 2015-2019 BES.
- * All rights reserved. All unpublished rights reserved.
- *
- * No part of this work may be used or reproduced in any form or by any
- * means, or stored in a database or retrieval system, without prior written
- * permission of BES.
- *
- * Use of this work is governed by a license granted by BES.
- * This work contains confidential and proprietary information of
- * BES. which is protected by copyright, trade secret,
- * trademark and other intellectual property rights.
- *
- ****************************************************************************/
- 
-#include "stdf_app.h"
-#include "stdf_bsp.h"
-#include "stdf_hal.h"
-#include "stdf_os.h"
-#include "stdf_sdk.h"
+/*******************************************************************************
+  Filename:       .
 
+  Version         V1.0.
+
+  Author          Yuping.Mo.
+
+  Description:    .
+
+
+  IMPORTANT:      .
+
+*******************************************************************************/
+
+/*******************************************************************************
+ * INCLUDES
+ */
+#include "stdf_define.h" 
+#include "stdf_app.h"
+
+
+/*******************************************************************************
+ * MACROS
+ */
+#define STDF_APP_LOG(str, ...)         STDF_LOG("[APP] %s "str, __func__, ##__VA_ARGS__)
+#define STDF_APP_ASSERT(cond)          STDF_ASSERT(cond)
+
+/*******************************************************************************
+ * TYPEDEFS
+ */
+
+/*******************************************************************************
+* GLOBAL VARIABLES
+*/
+
+/*******************************************************************************
+ * EXTERNAL VARIABLES
+ */
+
+/*******************************************************************************
+ * FUNCTIONS
+ */
+
+/*******************************************************************************
+ * @fn      .
+ * @brief   .
+ * @param   .
+ * @return  .
+ * @notice  .
+ */
 void stdf_app_init(void)
 {
-   
+
 }
+
+/*******************************************************************************
+*******************************************************************************/
+
+
