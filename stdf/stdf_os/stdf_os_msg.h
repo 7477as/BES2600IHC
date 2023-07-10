@@ -12,25 +12,26 @@
 
 *******************************************************************************/
 
+#ifndef __STDF_OS_MSG_H__
+#define __STDF_OS_MSG_H__
+
 /*******************************************************************************
  * INCLUDES
  */
-#include "stdf_define.h" 
-#include "stdf_os.h" 
+#include "plat_types.h"
+//#include "stdf_os_config.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*******************************************************************************
  * MACROS
  */
-#define STDF_OS_LOG(str, ...)               STDF_LOG("[OS] %s "str, __func__, ##__VA_ARGS__)
-#define STDF_OS_ASSERT(cond)                STDF_ASSERT(cond)
 
 /*******************************************************************************
  * TYPEDEFS
  */
-
-/*******************************************************************************
-* GLOBAL VARIABLES
-*/
 
 /*******************************************************************************
  * EXTERNAL VARIABLES
@@ -39,25 +40,15 @@
 /*******************************************************************************
  * FUNCTIONS
  */
-
-/*******************************************************************************
- * @fn      .
- * @brief   .
- * @param   .
- * @return  .
- * @notice  .
- */
-void stdf_os_init(void)
-{
-    STDF_OS_LOG("");
-
-    stdf_os_mem_init();
-
-    stdf_os_msg_init();
-
-    stdf_os_delay_msg_init();   
-}
+void stdf_os_msg_init(void);
+int  stdf_os_msg_mailbox_put(stdf_os_handler_t handler, stdf_os_msg_id_t msg_id, void *payload);
 
 /*******************************************************************************
 *******************************************************************************/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __STDF_OS_MSG_H__ */
 

@@ -15,14 +15,15 @@
 /*******************************************************************************
  * INCLUDES
  */
-#include "stdf_define.h" 
-#include "stdf_os.h" 
+#include "stdf_os.h"
+
+#include "stdf_define.h"
 
 /*******************************************************************************
  * MACROS
  */
-#define STDF_OS_LOG(str, ...)               STDF_LOG("[OS] %s "str, __func__, ##__VA_ARGS__)
-#define STDF_OS_ASSERT(cond)                STDF_ASSERT(cond)
+#define STDF_OS_MEM_LOG(str, ...)           STDF_LOG("[OS][MEM] %s "str, __func__, ##__VA_ARGS__)
+#define STDF_OS_MEM_ASSERT(cond)            STDF_ASSERT(cond)
 
 /*******************************************************************************
  * TYPEDEFS
@@ -47,15 +48,9 @@
  * @return  .
  * @notice  .
  */
-void stdf_os_init(void)
+void stdf_os_mem_init(void)
 {
-    STDF_OS_LOG("");
-
-    stdf_os_mem_init();
-
-    stdf_os_msg_init();
-
-    stdf_os_delay_msg_init();   
+    STDF_OS_MEM_LOG("");
 }
 
 /*******************************************************************************

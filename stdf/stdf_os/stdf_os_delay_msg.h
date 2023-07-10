@@ -1,9 +1,9 @@
 /*******************************************************************************
   Filename:       .
 
-  Version         V1.0.
+  Version         .
 
-  Author          Yuping.Mo.
+  Author          .
 
   Description:    .
 
@@ -12,25 +12,27 @@
 
 *******************************************************************************/
 
+#ifndef __STDF_OS_DELAY_MSG_H__
+#define __STDF_OS_DELAY_MSG_H__
+
+
 /*******************************************************************************
  * INCLUDES
  */
-#include "stdf_define.h" 
-#include "stdf_os.h" 
+#include "plat_types.h"
+#include "stdf_os_config.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*******************************************************************************
  * MACROS
  */
-#define STDF_OS_LOG(str, ...)               STDF_LOG("[OS] %s "str, __func__, ##__VA_ARGS__)
-#define STDF_OS_ASSERT(cond)                STDF_ASSERT(cond)
 
 /*******************************************************************************
  * TYPEDEFS
  */
-
-/*******************************************************************************
-* GLOBAL VARIABLES
-*/
 
 /*******************************************************************************
  * EXTERNAL VARIABLES
@@ -39,25 +41,21 @@
 /*******************************************************************************
  * FUNCTIONS
  */
+// APIs, ALL the APIs should be called after stdf_os_init()
+void     stdf_os_delay_msg_send(stdf_os_handler_t handler, stdf_os_msg_id_t msg_id, void *payload);
+void     stdf_os_delay_msg_send_later(stdf_os_handler_t handler, stdf_os_msg_id_t msg_id, void *payload, uint32_t delay);
+uint16_t stdf_os_delay_msg_get_count(stdf_os_handler_t handler, stdf_os_msg_id_t msg_id);
+bool     stdf_os_delay_msg_cancel_first(stdf_os_handler_t handler, stdf_os_msg_id_t msg_id);
+uint16_t stdf_os_delay_msg_cancel_all(stdf_os_handler_t handler, stdf_os_msg_id_t msg_id);
 
-/*******************************************************************************
- * @fn      .
- * @brief   .
- * @param   .
- * @return  .
- * @notice  .
- */
-void stdf_os_init(void)
-{
-    STDF_OS_LOG("");
-
-    stdf_os_mem_init();
-
-    stdf_os_msg_init();
-
-    stdf_os_delay_msg_init();   
-}
+// Framework
+void     stdf_os_delay_msg_init(void);
 
 /*******************************************************************************
 *******************************************************************************/
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __STDF_OS_DELAY_MSG_H__ */

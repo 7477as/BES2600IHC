@@ -12,25 +12,42 @@
 
 *******************************************************************************/
 
+#ifndef __STDF_OS_CONFIG_H__
+#define __STDF_OS_CONFIG_H__
+
 /*******************************************************************************
  * INCLUDES
  */
-#include "stdf_define.h" 
-#include "stdf_os.h" 
+#include "plat_types.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*******************************************************************************
  * MACROS
  */
-#define STDF_OS_LOG(str, ...)               STDF_LOG("[OS] %s "str, __func__, ##__VA_ARGS__)
-#define STDF_OS_ASSERT(cond)                STDF_ASSERT(cond)
+#define STDF_OS_MSG_ID_INVALID              0x0000
+#define STDF_OS_MSG_ID_BASE_INTERNAL        0x0001 // internal message from 0x0000 to 0x7FFF
+#define STDF_OS_MSG_ID_BASE_GLOABLE         0x8000 // global message from 0x8000 to 0xFFFF
 
 /*******************************************************************************
  * TYPEDEFS
  */
+//
+typedef  uint16_t stdf_os_msg_id_t;
 
-/*******************************************************************************
-* GLOBAL VARIABLES
-*/
+// The standard function style of the message handler
+typedef  void (*stdf_os_handler_t)(stdf_os_msg_id_t msg_id, void *payload);
+
+//
+typedef struct
+{
+    stdf_os_handler_t  handler;             // the handler to recieved the message
+    stdf_os_msg_id_t   msg_id;
+    void              *payload;             //
+}stdf_os_msg_t;
+
 
 /*******************************************************************************
  * EXTERNAL VARIABLES
@@ -41,23 +58,11 @@
  */
 
 /*******************************************************************************
- * @fn      .
- * @brief   .
- * @param   .
- * @return  .
- * @notice  .
- */
-void stdf_os_init(void)
-{
-    STDF_OS_LOG("");
-
-    stdf_os_mem_init();
-
-    stdf_os_msg_init();
-
-    stdf_os_delay_msg_init();   
-}
-
-/*******************************************************************************
 *******************************************************************************/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __STDF_OS_CONFIG_H__ */
 
