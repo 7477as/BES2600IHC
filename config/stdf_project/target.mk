@@ -540,7 +540,7 @@ LIB_LDFLAGS += -lstdc++ -lsupc++
 #LDFLAGS_IMAGE += --wrap main
 
 export RAMCP_SIZE ?= 0x26000
-export RAMCPX_SIZE ?= 0x8800
+export RAMCPX_SIZE ?= 0x9800
 
 ifeq ($(SPEECH_TX_DTLN),1)
 core-y += thirdparty/tflite/
