@@ -27,9 +27,9 @@ extern "C" {
 /*******************************************************************************
  * MACROS
  */
-#define STDF_OS_MSG_ID_INVALID              0x0000
-#define STDF_OS_MSG_ID_BASE_INTERNAL        0x0001 // internal message from 0x0000 to 0x7FFF
-#define STDF_OS_MSG_ID_BASE_GLOABLE         0x8000 // global message from 0x8000 to 0xFFFF
+#define STDF_OS_MSG_ID_INVALID              0xFFFF
+#define STDF_OS_MSG_ID_BASE_INTERNAL        0x0000 // internal message from 0x0000 to 0x7FFF
+#define STDF_OS_MSG_ID_BASE_GLOABLE         0x8000 // global message from 0x8000 to 0xFFFE
 
 /*******************************************************************************
  * TYPEDEFS
