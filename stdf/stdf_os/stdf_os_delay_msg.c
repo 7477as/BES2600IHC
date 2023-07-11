@@ -380,10 +380,15 @@ static bool stdf_os_delay_msg_delate_first(stdf_os_handler_t handler,
         
         if(stdf_os_delay_msg_get_latest() == min_run_time_index)
         {
-            STDF_OS_DELAY_MSG_LOG("delated the latest");
+            STDF_OS_DELAY_MSG_LOG("delated is the latest");
             stdf_os_delay_msg_timer_stop();
             stdf_os_delay_msg_deinit(min_run_time_index);
             stdf_os_delay_msg_timer_start();
+        }
+        else
+        {
+            STDF_OS_DELAY_MSG_LOG("delated is not the latest");
+            stdf_os_delay_msg_deinit(min_run_time_index);
         }
         return true;
     }
