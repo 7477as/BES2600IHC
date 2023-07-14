@@ -29,6 +29,7 @@
 #define STDF_BSP_KEY_MULT_PRESS_TIME        500 // ms
 #define STDF_BSP_KEY_LONG_PRESS_TIME        1500
 #define STDF_BSP_KEY_LONG_LONG_PRESS_TIME   5000
+#define STDF_BSP_KEY_CONTINUOUS_PRESS_TIME  100
 
 
 #define STDF_BSP_KEY_LOG(str, ...)          STDF_LOG("[BSP][KEY] %s "str, __func__, ##__VA_ARGS__)
@@ -174,8 +175,12 @@ static void stdf_bsp_key_gpio_init(void)
 static void stdf_bsp_key_event_set(stdf_bsp_key_num_t key_num, stdf_bsp_key_event_t event)
 {
     uint32_t delay;
-    uint16_t msg = ((uint8_t)key_num << 8) | (uint8_t)event;
-           
+
+    if(!(stdf_bsp_key_data[key_num].event_mask & (1 << event)))
+    {
+        return;
+    }
+    
     switch(event)
     {
         case STDF_BSP_KEY_EVENT_PRESS:
@@ -194,11 +199,13 @@ static void stdf_bsp_key_event_set(stdf_bsp_key_num_t key_num, stdf_bsp_key_even
             delay = STDF_BSP_KEY_LONG_LONG_PRESS_TIME;
             break;
         case STDF_BSP_KEY_EVENT_CONTINUOUS_PRESS:
-            delay = 0;
+            delay = STDF_BSP_KEY_CONTINUOUS_PRESS_TIME;
             break;
         default:
             return;
     }
+    
+    uint16_t msg = ((uint8_t)key_num << 8) | (uint8_t)event;
     MessageCancelAll(stdf_bsp_key_event_msg_handler, msg);
     MessageSendLater(stdf_bsp_key_event_msg_handler, msg, NULL, delay);
 }
@@ -211,7 +218,12 @@ static void stdf_bsp_key_event_set(stdf_bsp_key_num_t key_num, stdf_bsp_key_even
  */
 static void stdf_bsp_key_event_reset(stdf_bsp_key_num_t key_num, stdf_bsp_key_event_t event)
 { 
-    uint16_t msg_id = ((uint8_t)key_num << 8) | (uint8_t)event;
+    if(!(stdf_bsp_key_data[key_num].event_mask & (1 << event)))
+    {
+        return;
+    }
+    
+    uint16_t msg_id = ((uint8_t)key_num << 8) | (uint8_t)event;    
     MessageCancelAll(stdf_bsp_key_event_msg_handler, msg_id); 
 }
 
@@ -234,14 +246,17 @@ void stdf_bsp_key_state_changed(stdf_bsp_key_num_t key_num, stdf_bsp_key_state_t
 
     // handle press, release, long press and long long press event
     if(state == STDF_BSP_KEY_STATE_PRESS)
-    {  
+    {
+        stdf_bsp_key_event_set(key_num, STDF_BSP_KEY_EVENT_PRESS);
         stdf_bsp_key_event_set(key_num, STDF_BSP_KEY_EVENT_LONG_PRESS);
         stdf_bsp_key_event_set(key_num, STDF_BSP_KEY_EVENT_LONG_LONG_PRESS);
     }
     else // if(state == STDF_BSP_KEY_STATE_RELEASE)
     {   
+        stdf_bsp_key_event_set(key_num, STDF_BSP_KEY_EVENT_RELEASE);
         stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_LONG_PRESS);
         stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_LONG_LONG_PRESS);
+        stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_CONTINUOUS_PRESS);
     }
 
     // handle single, double and trible click event
@@ -257,6 +272,7 @@ void stdf_bsp_key_state_changed(stdf_bsp_key_num_t key_num, stdf_bsp_key_state_t
             (*p_press_count)++;
         }
         *p_last_press_time = now;
+        stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_SINGLE_CLICK);
         stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_DOUBLE_CLICK);
         stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_TRIPLE_CLICK);
     }
@@ -274,21 +290,29 @@ void stdf_bsp_key_state_changed(stdf_bsp_key_num_t key_num, stdf_bsp_key_state_t
         *p_last_release_time = now;
 
         // handle double and triple press
+        if(*p_press_count == 1)
+        {
+            stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_SINGLE_CLICK);
+            stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_DOUBLE_CLICK);
+            stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_TRIPLE_CLICK);
+            stdf_bsp_key_event_set(key_num, STDF_BSP_KEY_EVENT_SINGLE_CLICK);
+        }
         if(*p_press_count == 2)
         {
+            stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_SINGLE_CLICK);
             stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_DOUBLE_CLICK);
             stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_TRIPLE_CLICK);
             stdf_bsp_key_event_set(key_num, STDF_BSP_KEY_EVENT_DOUBLE_CLICK);
         }
         else if(*p_press_count == 3)
         {
+            stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_SINGLE_CLICK);
             stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_DOUBLE_CLICK);
             stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_TRIPLE_CLICK);
             stdf_bsp_key_event_set(key_num, STDF_BSP_KEY_EVENT_TRIPLE_CLICK);
         }
         else if(*p_press_count > 3)
         {
-            stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_DOUBLE_CLICK);
             stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_TRIPLE_CLICK);
         }
     }
@@ -335,7 +359,7 @@ static void stdf_bsp_key_event_msg_handler(stdf_os_msg_id_t msg_id, void *payloa
     STDF_BSP_KEY_ASSERT(key_num < STDF_BSP_KEY_NUM_MAX); 
     stdf_bsp_key_event_callback_t callback = stdf_bsp_key_data[key_num].event_callback;
     stdf_bsp_key_event_mask_t key_event_masks = stdf_bsp_key_data[key_num].event_mask;
-    STDF_BSP_KEY_LOG("callback %p key_num %d event %d!", callback, key_num, event);
+    //STDF_BSP_KEY_LOG("callback %p key_num %d event %d!", callback, key_num, event);
     
     // check parameter 
     if(callback == NULL || ((key_event_masks & (1 << event)) == 0)) 
@@ -350,9 +374,19 @@ static void stdf_bsp_key_event_msg_handler(stdf_os_msg_id_t msg_id, void *payloa
         case STDF_BSP_KEY_EVENT_SINGLE_CLICK: 
         case STDF_BSP_KEY_EVENT_DOUBLE_CLICK:
         case STDF_BSP_KEY_EVENT_TRIPLE_CLICK:
+            callback(key_num, event);
+            break;
         case STDF_BSP_KEY_EVENT_LONG_PRESS:
+            stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_CONTINUOUS_PRESS);
+            stdf_bsp_key_event_set(key_num, STDF_BSP_KEY_EVENT_CONTINUOUS_PRESS);
+            callback(key_num, event);
+            break;
         case STDF_BSP_KEY_EVENT_LONG_LONG_PRESS:
+            callback(key_num, event);
+            break;
         case STDF_BSP_KEY_EVENT_CONTINUOUS_PRESS:
+            stdf_bsp_key_event_reset(key_num, STDF_BSP_KEY_EVENT_CONTINUOUS_PRESS);
+            stdf_bsp_key_event_set(key_num, STDF_BSP_KEY_EVENT_CONTINUOUS_PRESS);
             callback(key_num, event);
             break;
         default:
