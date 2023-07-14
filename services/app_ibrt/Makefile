@@ -101,3 +101,9 @@ endif
 ifeq ($(TWS_SWITCH_ACCORDING_NOISE),1)
 CFLAGS_app_ibrt_customif_ui.o += -DTWS_SWITCH_ACCORDING_NOISE
 endif
+
+ifeq ($(__STDF__),1)
+subdir-ccflags-y += \
+	-Istdf/stdf_sdk
+endif
+

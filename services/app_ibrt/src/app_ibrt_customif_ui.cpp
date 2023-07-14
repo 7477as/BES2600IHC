@@ -45,6 +45,11 @@ extern "C" int32_t app_anc_sync_status(void);
 #include "app_ally.h"
 extern "C" void app_ally_sync_status_send();
 #endif
+
+#ifdef __STDF__
+#include "stdf_sdk_cb.h"
+#endif 
+
 /*
  *reset accept new mobile incoming feature
 */
@@ -187,6 +192,9 @@ void app_ibrt_customif_ui_global_handler_ind(ibrt_link_type_e link_type, uint8_t
         default:
             break;
     }
+#ifdef __STDF__
+    stdf_sdk_cb_global_handler_ind(link_type, evt_type, status);
+#endif
 }
 
 void app_ibrt_customif_ui_global_event_update(ibrt_event_type evt_type, ibrt_ui_state_e old_state, \
@@ -334,18 +342,26 @@ void app_ibrt_customif_ui_reconfig_bd_addr(bt_bdaddr_t local_addr, bt_bdaddr_t p
 
 void app_ibrt_customif_mobile_linkloss_ind(void)
 {
-
+#ifdef __STDF__
+    stdf_sdk_cb_bt_linkloss();
+#endif
 }
 
 /*custom can block connect mobile if needed*/
 bool app_ibrt_customif_connect_mobile_needed_ind(void)
 {
+#ifdef __STDF__
+    stdf_sdk_cb_bt_connecting();
+#endif
     return true;
 }
 
 void app_ibrt_customif_mobile_connected_ind(bt_bdaddr_t * addr)
 {
     app_ibrt_if_config_keeper_mobile_update(addr);
+#ifdef __STDF__
+    stdf_sdk_cb_bt_connected(addr->address);
+#endif
 }
 
 void app_ibrt_customif_ibrt_connected_ind(bt_bdaddr_t * addr)
@@ -356,14 +372,23 @@ void app_ibrt_customif_ibrt_connected_ind(bt_bdaddr_t * addr)
 void app_ibrt_customif_tws_connected_ind(bt_bdaddr_t * addr)
 {
     app_ibrt_if_config_keeper_tws_update(addr);
+#ifdef __STDF__
+    stdf_sdk_cb_tws_connected(addr->address);
+#endif
 }
 
 void app_ibrt_customif_mobile_disconnected_ind(void)
 {
+#ifdef __STDF__
+    stdf_sdk_cb_bt_disconnected();
+#endif
 }
 
 void app_ibrt_customif_tws_disconnected_ind(void)
 {
+#ifdef __STDF__
+    stdf_sdk_cb_tws_disconnected();
+#endif
 }
 
 void app_ibrt_customif_profile_state_change_ind(uint32_t profile,uint8_t connected)
@@ -559,7 +584,9 @@ void app_ibrt_customif_profile_state_change_ind(uint32_t profile,uint8_t connect
             TRACE(1,"unknown profle=%x state change",profile);
             break;
     }
-
+#ifdef __STDF__
+    stdf_sdk_cb_profile_state_change_ind(profile, connected);
+#endif
 }
 
 void app_ibrt_customif_ui_get_remote_name_callback_ind(uint8_t *data, uint16_t length)
@@ -573,11 +600,17 @@ void app_ibrt_customif_ui_pairing_set(trigger_pairing_mode_type_e trigger_type)
 #ifdef GFPS_ENABLED
     app_enter_fastpairing_mode();
 #endif
+#ifdef __STDF__
+    stdf_sdk_cb_pairing_enter(trigger_type);
+#endif
 }
 
 void app_ibrt_customif_ui_pairing_clear(trigger_pairing_mode_type_e trigger_type)
 {
     TRACE(2,"%s: %d", __func__, __LINE__);
+#ifdef __STDF__
+    stdf_sdk_cb_pairing_exit(trigger_type);
+#endif   
 }
 
 /*
