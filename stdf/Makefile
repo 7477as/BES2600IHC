@@ -3,6 +3,9 @@ obj-y := stdf_main/ stdf_app/ stdf_bsp/ stdf_hal/ stdf_os/ stdf_sdk/
 obj-y += stdf_bsp/key/
 
 #sdk include
+subdir-ccflags-y += \
+    -Iservices/app_tws/inc \
+    -Iservices/nv_section/factory_section/
 
 #stdf include
 subdir-ccflags-y += \

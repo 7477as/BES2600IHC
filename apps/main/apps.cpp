@@ -1970,6 +1970,10 @@ int app_init(void)
     GSoundOtaHandlerInit();
 #endif
 
+#ifdef __STDF__
+    stdf_init_fast();
+#endif
+
     btdrv_start_bt();
     if (pwron_case != APP_POWERON_CASE_TEST) {
         BesbtInit();

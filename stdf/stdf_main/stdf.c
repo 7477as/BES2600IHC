@@ -24,6 +24,7 @@
 #include "stdf_hal.h"
 #include "stdf_os.h"
 #include "stdf_sdk.h"
+#include "stdf_sdk_api.h"
 
 /*******************************************************************************
  * MACROS
@@ -65,6 +66,18 @@ void stdf_init(void)
     stdf_bsp_init();
 
     stdf_app_init();
+}
+
+/*******************************************************************************
+ * @fn      .
+ * @brief   .
+ * @param   .
+ * @return  .
+ * @notice  .
+ */
+void stdf_init_fast(void)
+{
+    stdf_sdk_api_init_earside();
 }
 
 /*******************************************************************************
