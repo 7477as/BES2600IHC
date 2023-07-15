@@ -311,6 +311,8 @@ export HOST_GEN_ECDH_KEY ?= 0
 
 export USE_TRACE_ID ?= 0
 
+export TRACE_GLOBAL_TAG ?= 1
+
 export PROMPT_IN_FLASH ?= 0
 
 export USE_POWER_KEY_RESET ?= 0

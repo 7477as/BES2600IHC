@@ -594,6 +594,44 @@ void app_ibrt_customif_ui_get_remote_name_callback_ind(uint8_t *data, uint16_t l
     TRACE(2,"app_ibrt_customif_ui_get_remote_name_callback_ind:length=%d, name=%s", length, data);
 }
 
+#ifdef __STDF__
+static int app_ibrt_fill_debug_info(char* buf, unsigned int buf_len)
+{
+    if (app_tws_is_left_side())
+    {
+        buf[0] = 'L';
+    }
+    else if (app_tws_is_right_side())
+    {
+        buf[0] = 'R';
+    }
+    else
+    {
+        buf[0] = 'U';
+    }
+
+    buf[1] = '-';
+
+    ibrt_role_e currentUIRole = app_ibrt_if_get_ibrt_role();
+    if (IBRT_MASTER == currentUIRole)
+    {
+        buf[2] = 'M';
+    }
+    else if (IBRT_SLAVE == currentUIRole)
+    {
+        buf[2] = 'S';
+    }
+    else
+    {
+        buf[2] = 'U';
+    }
+
+    buf[3] = '/';
+
+    return 4;
+}
+#endif
+
 void app_ibrt_customif_ui_pairing_set(trigger_pairing_mode_type_e trigger_type)
 {
     TRACE(2,"%s: trigger_type %d", __func__, trigger_type);
@@ -906,6 +944,10 @@ int app_ibrt_customif_ui_start(void)
 	app_ibrt_if_register_controller_error_handler_ind(app_ibrt_customif_ui_controller_error_handler_ind);
     app_ibrt_if_register_mobile_acl_connected_ind(NULL);
     app_ibrt_if_ui_reconfig(&config);
+
+#ifdef __STDF__
+    hal_trace_global_tag_register(app_ibrt_fill_debug_info);
+#endif
 
     if (config.delay_exit_sniff)
     {
