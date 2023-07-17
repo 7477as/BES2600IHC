@@ -36,6 +36,10 @@
 extern "C" bool app_usbaudio_mode_on(void);
 #endif
 
+#ifdef __STDF__
+#include "stdf_sdk_cb.h"
+#endif
+
 #define APP_BATTERY_TRACE(s,...)
 // TRACE(s, ##__VA_ARGS__)
 #ifndef APP_BATTERY_ERR_MV
@@ -300,6 +304,10 @@ int app_battery_handle_process_normal(uint32_t status,  union APP_BATTERY_MSG_PR
             TRACE(1,"CHARGING-->APP_BATTERY_CHARGER :%d", prams.charger);
             if (prams.charger == APP_BATTERY_CHARGER_PLUGIN)
             {
+#ifdef __STDF__
+                stdf_sdk_cb_5v_plug_in();
+#endif
+
 #ifdef BT_USB_AUDIO_DUAL_MODE
                 TRACE(2,"_debug: %s:%d",__func__,__LINE__);
                 btusb_switch(BTUSB_MODE_USB);
@@ -313,6 +321,9 @@ int app_battery_handle_process_normal(uint32_t status,  union APP_BATTERY_MSG_PR
             }
             else if (prams.charger == APP_BATTERY_CHARGER_PLUGOUT)
             {
+#ifdef __STDF__
+                stdf_sdk_cb_5v_plug_out();
+#endif
 #ifdef BT_USB_AUDIO_DUAL_MODE
                 TRACE(2,"_debug: %s:%d",__func__,__LINE__);
                 btusb_switch(BTUSB_MODE_BT);
@@ -341,6 +352,9 @@ int app_battery_handle_process_charging(uint32_t status,  union APP_BATTERY_MSG_
             TRACE(2,"CHARGING:%d/%d", prams.charger);
             if (prams.charger == APP_BATTERY_CHARGER_PLUGOUT)
             {
+#ifdef __STDF__
+                stdf_sdk_cb_5v_plug_out();
+#endif            
 #ifdef BT_USB_AUDIO_DUAL_MODE
                 TRACE(2,"%s:%d.",__func__,__LINE__);
 #else
@@ -355,6 +369,9 @@ int app_battery_handle_process_charging(uint32_t status,  union APP_BATTERY_MSG_
             }
             else if (prams.charger == APP_BATTERY_CHARGER_PLUGIN)
             {
+#ifdef __STDF__
+                stdf_sdk_cb_5v_plug_in();
+#endif             
 #ifdef BT_USB_AUDIO_DUAL_MODE
                 TRACE(2,"%s:%d.",__func__,__LINE__);
 #endif
@@ -688,6 +705,9 @@ static void app_battery_charger_handler(enum PMU_CHARGER_STATUS_T status)
     pmu_charger_set_irq_handler(NULL);
     app_battery_event_process(APP_BATTERY_STATUS_PLUGINOUT,
                               (status == PMU_CHARGER_PLUGIN) ? APP_BATTERY_CHARGER_PLUGIN : APP_BATTERY_CHARGER_PLUGOUT);
+#ifdef __STDF__
+    //(status == PMU_CHARGER_PLUGIN) ? (stdf_sdk_cb_5v_plug_in()) : (stdf_sdk_cb_5v_plug_out());
+#endif
 }
 
 static void app_battery_pluginout_debounce_start(void)

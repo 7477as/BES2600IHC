@@ -15,3 +15,6 @@ ifeq ($(VOICE_PROMPT),1)
 CFLAGS_app_battery.o += -DMEDIA_PLAYER_SUPPORT
 endif
 
+ifeq ($(__STDF__),1)
+subdir-ccflags-y += -Istdf/stdf_sdk
+endif

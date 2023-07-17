@@ -4,9 +4,17 @@ obj-y += stdf_bsp/key/
 
 #sdk include
 subdir-ccflags-y += \
+    -Iapps/key \
+    -Iplatform/drivers/bt \
     -Iservices/app_tws/inc \
-    -Iservices/nv_section/factory_section/
-
+    -Iservices/bt_if_enhanced/inc \
+    -Iservices/app_ibrt/inc \
+    -Iservices/multimedia/audio/codec/sbc/inc \
+    -Iservices/nv_section/factory_section \
+    -Iservices/tws_ibrt/inc \
+    -Iutils/cqueue
+    
+    
 #stdf include
 subdir-ccflags-y += \
     -Iconfig/$(T) \
