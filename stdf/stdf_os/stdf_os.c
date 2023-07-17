@@ -49,7 +49,7 @@
  */
 void stdf_os_init(void)
 {
-    STDF_OS_LOG("");
+    //STDF_OS_LOG("");
 
     stdf_os_mem_init();
 

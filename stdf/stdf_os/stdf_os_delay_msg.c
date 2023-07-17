@@ -84,7 +84,7 @@ osMutexDef(STDF_OS_DELAY_MSG_MUTEX);
  */
 static void stdf_os_delay_msg_deinit(uint8_t index)
 {
-    STDF_OS_DELAY_MSG_LOG("index %d", index);
+    //STDF_OS_DELAY_MSG_LOG("index %d", index);
     stdf_os_delay_msg_data[index].used     = false;
     stdf_os_delay_msg_data[index].latest   = false;
     stdf_os_delay_msg_data[index].handler  = NULL;
@@ -123,7 +123,7 @@ static uint8_t stdf_os_delay_msg_get_latest(void)
  */
 static void stdf_os_delay_msg_set_latest(uint8_t index, bool enable)
 {   
-    STDF_OS_DELAY_MSG_LOG("index %d", index);
+    //STDF_OS_DELAY_MSG_LOG("index %d", index);
     if(index  < STDF_OS_DELAY_MSG_MAX_NUM)
     {
         stdf_os_delay_msg_data[index].latest = enable;
@@ -160,13 +160,13 @@ static  void stdf_os_delay_msg_timer_start(void)
     if(min_run_time != STDF_OS_DELAY_MSG_FOREVER && 
        min_run_time_index < STDF_OS_DELAY_MSG_MAX_NUM)
     {   
-        stdf_os_handler_t handler = stdf_os_delay_msg_data[min_run_time_index].handler;
-        stdf_os_msg_id_t msg_id = stdf_os_delay_msg_data[min_run_time_index].msg_id;
-        void *payload = stdf_os_delay_msg_data[min_run_time_index].payload;
+        //stdf_os_handler_t handler = stdf_os_delay_msg_data[min_run_time_index].handler;
+        //stdf_os_msg_id_t msg_id = stdf_os_delay_msg_data[min_run_time_index].msg_id;
+        //void *payload = stdf_os_delay_msg_data[min_run_time_index].payload;
         uint32_t run_time = stdf_os_delay_msg_data[min_run_time_index].run_time;
     
-        STDF_OS_DELAY_MSG_LOG("func %p msg_id %d payload %p, run_time %d current_ms %d", 
-                              handler, msg_id, payload, run_time, current_ms);
+        //STDF_OS_DELAY_MSG_LOG("func %p msg_id %d payload %p, run_time %d current_ms %d",
+        //                      handler, msg_id, payload, run_time, current_ms);
         
         // check if the time is too late to call handle
         if(run_time <= current_ms)
@@ -191,7 +191,7 @@ static  void stdf_os_delay_msg_timer_start(void)
     }
     else
     {
-        STDF_OS_DELAY_MSG_LOG("message is empty");
+        //STDF_OS_DELAY_MSG_LOG("message is empty");
     }
 }
 
@@ -216,7 +216,7 @@ static bool stdf_os_delay_msg_timer_is_run(void)
  */
 static void stdf_os_delay_msg_timer_stop(void)
 {
-    STDF_OS_DELAY_MSG_LOG("");
+    //STDF_OS_DELAY_MSG_LOG("");
     if(osTimerIsRunning(stdf_os_delay_msg_timer)) 
     {
         osTimerStop(stdf_os_delay_msg_timer);
@@ -385,21 +385,21 @@ static bool stdf_os_delay_msg_delate_first(stdf_os_handler_t handler,
         
         if(stdf_os_delay_msg_get_latest() == min_run_time_index)
         {
-            STDF_OS_DELAY_MSG_LOG("delated is the latest");
+            //STDF_OS_DELAY_MSG_LOG("delated is the latest");
             stdf_os_delay_msg_timer_stop();
             stdf_os_delay_msg_deinit(min_run_time_index);
             stdf_os_delay_msg_timer_start();
         }
         else
         {
-            STDF_OS_DELAY_MSG_LOG("delated is not the latest");
+            //STDF_OS_DELAY_MSG_LOG("delated is not the latest");
             stdf_os_delay_msg_deinit(min_run_time_index);
         }
         return true;
     }
     else
     {
-        STDF_OS_DELAY_MSG_LOG("failed not find");
+        //STDF_OS_DELAY_MSG_LOG("failed not find");
         return false;
     }
 }
@@ -521,7 +521,7 @@ uint16_t stdf_os_delay_msg_cancel_all(stdf_os_handler_t handler,
  */
 void stdf_os_delay_msg_init(void)
 {
-    STDF_OS_DELAY_MSG_LOG("");
+    //STDF_OS_DELAY_MSG_LOG("");
 
     // deinit all data
     for(uint8_t index = 0; index < STDF_OS_DELAY_MSG_MAX_NUM; index++) 

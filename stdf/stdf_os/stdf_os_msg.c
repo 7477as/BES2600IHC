@@ -211,7 +211,7 @@ static void stdf_os_msg_thread(void const *argument)
  */
 void stdf_os_msg_init(void)
 {
-    STDF_OS_MSG_LOG("");
+    //STDF_OS_MSG_LOG("");
     
     stdf_os_msg_mailbox_init();
     
