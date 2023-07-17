@@ -2220,11 +2220,7 @@ exit:
 #endif
 
 #if defined(SIMPLE_TEST_UI)
-#if defined(__STDF__)
-    app_ibrt_if_enter_freeman_pairing();
-#else
     app_ibrt_if_enter_pairing_after_tws_connected();
-#endif
 #endif
 
 #if defined(__STDF__)

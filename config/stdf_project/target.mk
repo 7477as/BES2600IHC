@@ -288,7 +288,6 @@ export A2DP_AVDTP_CP ?= 0
 export IBRT ?= 1
 
 export IBRT_SEARCH_UI ?= 1
-export SIMPLE_TEST_UI ?= 1
 
 export BES_AUD ?= 1
 
