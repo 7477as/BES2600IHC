@@ -120,12 +120,23 @@ bool stdf_sdk_api_phy_is_state_in_ear(bool local)
  */
 void stdf_sdk_api_phy_set_state_in_case_close(void)
 {
-    bool in_case_open = stdf_sdk_api_phy_is_state_in_case_open(true);
-    
-    STDF_SDK_API_LOG("%s", in_case_open ? "success" : "fail!!!");
-    if(in_case_open)
+    ibrt_box_state box_state = app_ibrt_ui_get_ctx()->box_state;
+    ibrt_box_state box_state_future = app_ibrt_ui_get_ctx()->box_state_future;
+
+    STDF_SDK_API_LOG("box_state (%d %d) -> %d", box_state, box_state_future, IBRT_IN_BOX_CLOSED);
+    if(box_state == IBRT_BOX_UNKNOWN)
+    {
+        STDF_SDK_API_LOG("init!!!");
+        app_ibrt_ui_event_entry(IBRT_CLOSE_BOX_EVENT);    
+    }
+    else if((box_state_future == IBRT_IN_BOX_OPEN) || 
+        ((box_state_future != IBRT_IN_BOX_OPEN) && (box_state == IBRT_IN_BOX_OPEN)))
     {
         app_ibrt_ui_event_entry(IBRT_CLOSE_BOX_EVENT);    
+    }
+    else
+    {
+        STDF_SDK_API_LOG("fail!!!");
     }
 }
 
@@ -134,17 +145,28 @@ void stdf_sdk_api_phy_set_state_in_case_close(void)
  */
 void stdf_sdk_api_phy_set_state_in_case_open(void)
 {
-    bool in_case_close = stdf_sdk_api_phy_is_state_in_case_close(true);
-    bool out_case_ear = stdf_sdk_api_phy_is_state_out_case_ear(true);
-    
-    STDF_SDK_API_LOG("%s", (in_case_close || out_case_ear) ? "success" : "fail!!!");
-    if(in_case_close)
+    ibrt_box_state box_state = app_ibrt_ui_get_ctx()->box_state;
+    ibrt_box_state box_state_future = app_ibrt_ui_get_ctx()->box_state_future;
+
+    STDF_SDK_API_LOG("box_state (%d %d) -> %d", box_state, box_state_future, IBRT_IN_BOX_OPEN);
+    if(box_state == IBRT_BOX_UNKNOWN)
+    {
+        STDF_SDK_API_LOG("init!!!");
+        app_ibrt_ui_event_entry(IBRT_OPEN_BOX_EVENT);    
+    }     
+    else if((box_state_future == IBRT_IN_BOX_CLOSED) || 
+        ((box_state_future != IBRT_IN_BOX_CLOSED) && (box_state == IBRT_IN_BOX_CLOSED)))
     {
         app_ibrt_ui_event_entry(IBRT_OPEN_BOX_EVENT);    
     }
-    else if(out_case_ear)
+    else if((box_state_future == IBRT_OUT_BOX) || 
+        ((box_state_future != IBRT_OUT_BOX) && (box_state == IBRT_OUT_BOX)))
     {
         app_ibrt_ui_event_entry(IBRT_PUT_IN_EVENT);
+    }
+    else
+    {
+        STDF_SDK_API_LOG("fail!!!");
     }
 }
 
@@ -153,18 +175,29 @@ void stdf_sdk_api_phy_set_state_in_case_open(void)
  */
 void stdf_sdk_api_phy_set_state_out_case_ear(void)
 {
-    bool in_case_open = stdf_sdk_api_phy_is_state_in_case_open(true);
-    bool in_ear = stdf_sdk_api_phy_is_state_in_ear(true);
-    
-    STDF_SDK_API_LOG("%s", (in_case_open || in_ear) ? "success" : "fail!!!");
-    if(in_case_open)
+    ibrt_box_state box_state = app_ibrt_ui_get_ctx()->box_state;
+    ibrt_box_state box_state_future = app_ibrt_ui_get_ctx()->box_state_future;
+
+    STDF_SDK_API_LOG("box_state (%d %d) -> %d", box_state, box_state_future, IBRT_OUT_BOX);
+    if(box_state == IBRT_BOX_UNKNOWN)
+    {
+        STDF_SDK_API_LOG("init!!!");
+        app_ibrt_ui_event_entry(IBRT_FETCH_OUT_EVENT);   
+    }    
+    else if((box_state_future == IBRT_IN_BOX_OPEN) || 
+        ((box_state_future == IBRT_BOX_UNKNOWN) && (box_state == IBRT_IN_BOX_OPEN)))
     {
         app_ibrt_ui_event_entry(IBRT_FETCH_OUT_EVENT);    
     }
-    else if(in_ear)
+    else if((box_state_future == IBRT_OUT_BOX_WEARED) || 
+        ((box_state_future != IBRT_OUT_BOX_WEARED) && (box_state == IBRT_OUT_BOX_WEARED)))
     {
         app_ibrt_ui_event_entry(IBRT_WEAR_DOWN_EVENT);
     }
+    else
+    {
+        STDF_SDK_API_LOG("fail!!!");
+    }    
 }
 
 /*******************************************************************************
@@ -172,13 +205,24 @@ void stdf_sdk_api_phy_set_state_out_case_ear(void)
  */
 void stdf_sdk_api_phy_set_state_in_ear(void)
 {
-    bool in_ear = stdf_sdk_api_phy_is_state_in_ear(true);
-    
-    STDF_SDK_API_LOG("%s", !in_ear ? "success" : "fail!!!");
-    if(!in_ear)
+    ibrt_box_state box_state = app_ibrt_ui_get_ctx()->box_state;
+    ibrt_box_state box_state_future = app_ibrt_ui_get_ctx()->box_state_future;
+
+    STDF_SDK_API_LOG("box_state (%d %d) -> %d", box_state, box_state_future, IBRT_OUT_BOX_WEARED);
+    if(box_state == IBRT_BOX_UNKNOWN)
     {
+        STDF_SDK_API_LOG("init!!!");
         app_ibrt_ui_event_entry(IBRT_WEAR_UP_EVENT);    
-    }    
+    }
+    else if((box_state_future == IBRT_OUT_BOX) || 
+        ((box_state_future != IBRT_OUT_BOX) && (box_state == IBRT_OUT_BOX)))
+    {
+        app_ibrt_ui_event_entry(IBRT_WEAR_UP_EVENT);
+    }
+    else
+    {
+        STDF_SDK_API_LOG("fail!!!");
+    }
 }
 
 /* -----------------------------------------------------------------------------
