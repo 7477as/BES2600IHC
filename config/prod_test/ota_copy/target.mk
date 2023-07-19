@@ -1,10 +1,10 @@
-export SINGLE_WIRE_DOWNLOAD ?= 0
+export SINGLE_WIRE_DOWNLOAD ?= 1
 export DIRECT_TO_SINGLE_DLD ?= 0
-export OTA_BIN_COMPRESSED ?= 0
+export OTA_BIN_COMPRESSED ?= 1
 include config/programmer_inflash/target.mk
 
 ifeq ($(OTA_BIN_COMPRESSED),1)
-export NEW_IMAGE_FLASH_OFFSET ?= 0x130000
+export NEW_IMAGE_FLASH_OFFSET ?= 0x140000
 else
 export NEW_IMAGE_FLASH_OFFSET ?= 0x100000
 endif

@@ -3,6 +3,8 @@ make clean T=$TARGET_PRJ REL_BUILD=1
 make T=$TARGET_PRJ REL_BUILD=1 -j
 python3 ./tools/generate_py3_crc32_of_image.py ./out/$TARGET_PRJ/${TARGET_PRJ}.bin
 
+./tools/build_compressed_ota.sh out/$TARGET_PRJ/${TARGET_PRJ}.bin out/$TARGET_PRJ/${TARGET_PRJ}_compressed_ota.bin
+python3 ./tools/generate_py3_crc32_of_image.py out/$TARGET_PRJ/${TARGET_PRJ}_compressed_ota.bin
 
 bin_path=out/${TARGET_PRJ}/${TARGET_PRJ}.bin
 map_path=out/${TARGET_PRJ}/${TARGET_PRJ}.map
