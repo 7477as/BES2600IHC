@@ -31,6 +31,12 @@ extern "C" {
 /*******************************************************************************
  * TYPEDEFS
  */
+typedef enum
+{
+    STDF_SDK_API_EAR_SIDE_UNKOWN,
+    STDF_SDK_API_EAR_SIDE_LEFT,
+    STDF_SDK_API_EAR_SIDE_RIGHT
+} stdf_sdk_api_earside_t;
 
 /*******************************************************************************
  * EXTERNAL VARIABLES
@@ -56,13 +62,15 @@ void stdf_sdk_api_phy_set_state_in_ear(void);
  *                                   BT
  * ---------------------------------------------------------------------------*/
 
-void stdf_sdk_api_tws_enter_pairing(void);
+void stdf_sdk_api_enter_tws_pairing(void);
+void stdf_sdk_api_enter_freeman_pairing(void);
 
 /* -----------------------------------------------------------------------------
  *                                   misc
  * ---------------------------------------------------------------------------*/
 
 void stdf_sdk_api_init_earside(void);
+stdf_sdk_api_earside_t stdf_sdk_api_get_earside(void);
 
 /*******************************************************************************
 *******************************************************************************/

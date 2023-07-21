@@ -12,13 +12,14 @@
 
 *******************************************************************************/
 
-#ifndef __STDF_OS_CONFIG_H__
-#define __STDF_OS_CONFIG_H__
+#ifndef __STDF_HAL_VBUS_H__
+#define __STDF_HAL_VBUS_H__
 
 /*******************************************************************************
  * INCLUDES
  */
 #include "plat_types.h"
+#include "stdf_os.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,31 +28,17 @@ extern "C" {
 /*******************************************************************************
  * MACROS
  */
-#define STDF_OS_MSG_ID_INVALID              0xFFFF
-#define STDF_OS_IMSG_ID_BASE                0x0000 // (IMSG)Internal message ID from 0x0000 to 0x7FFF
-#define STDF_OS_GMSG_ID_BASE                0x8000 // (GMSG)Global message ID from 0x8000 to 0xFFFE
-
-
-// GMSG ID for communication
-#define STDF_OS_GMSG_ID_VBUS_RECEIVE_DATA   0x8000
 
 /*******************************************************************************
  * TYPEDEFS
  */
-//
-typedef  uint16_t stdf_os_msg_id_t;
-
-// The standard function style of the message handler
-typedef  void (*stdf_os_handler_t)(stdf_os_msg_id_t msg_id, void *payload);
-
-//
 typedef struct
 {
-    stdf_os_handler_t  handler;             // the handler to recieved the message
-    stdf_os_msg_id_t   msg_id;
-    void              *payload;             //
-}stdf_os_msg_t;
+    uint8_t  *payload;
+    uint16_t  length;    
+} stdf_hal_vbus_rx_data_t;
 
+typedef void (*stdf_hal_vbus_handler_t)(stdf_os_msg_id_t msg_id, void *payload);
 
 /*******************************************************************************
  * EXTERNAL VARIABLES
@@ -60,6 +47,9 @@ typedef struct
 /*******************************************************************************
  * FUNCTIONS
  */
+void stdf_hal_vbus_init(void);
+void stdf_hal_vbus_send(uint8_t *buf, uint16_t len);
+void stdf_hal_vbus_register_handler(stdf_hal_vbus_handler_t handler);
 
 /*******************************************************************************
 *******************************************************************************/
@@ -68,5 +58,4 @@ typedef struct
 }
 #endif
 
-#endif /* __STDF_OS_CONFIG_H__ */
-
+#endif /* __STDF_HAL_VBUS_H__ */

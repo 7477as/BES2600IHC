@@ -15,7 +15,9 @@
 /*******************************************************************************
  * INCLUDES
  */
-#include "stdf_app_key.h" 
+#include "stdf_app_ccp.h"
+#include "stdf_app_key.h"
+#include "stdf_app_protocal.h"
 #include "stdf_define.h" 
 #include "stdf_app.h"
 
@@ -50,6 +52,10 @@
  */
 void stdf_app_init(void)
 {
+    stdf_app_protocal_init();
+    
+    stdf_app_ccp_init();
+    
     stdf_app_key_init();
 }
 

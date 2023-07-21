@@ -236,7 +236,7 @@ void stdf_sdk_api_phy_set_state_in_ear(void)
  * @return  .
  * @notice  .
  */
-void stdf_sdk_api_tws_enter_pairing(void)
+void stdf_sdk_api_enter_tws_pairing(void)
 {
     STDF_SDK_API_LOG("");
     
@@ -255,6 +255,19 @@ void stdf_sdk_api_tws_enter_pairing(void)
     }
 }
 
+/*******************************************************************************
+ * @fn      .
+ * @brief   .
+ * @param   .
+ * @return  .
+ * @notice  .
+ */
+void stdf_sdk_api_enter_freeman_pairing(void)
+{
+    //app_ibrt_ui_event_entry(IBRT_NONE_EVENT);
+    app_ibrt_if_enter_freeman_pairing();
+}
+
 /* -----------------------------------------------------------------------------
  *                                   misc
  * ---------------------------------------------------------------------------*/
@@ -268,7 +281,7 @@ void stdf_sdk_api_tws_enter_pairing(void)
  */
 void stdf_sdk_api_init_earside(void)
 {
-    uint8_t earside_old = !app_tws_is_unknown_side() + app_tws_is_right_side();
+    stdf_sdk_api_earside_t earside_old = stdf_sdk_api_get_earside();
     
     // GPIO level is low means right side while high means left side
 #if defined(STDF_SDK_API_EARSIDE_USE_GPIO)
@@ -285,11 +298,22 @@ void stdf_sdk_api_init_earside(void)
 #error Please select a way to deside ear side!!!
 #endif
     
-    uint8_t earside_new = !app_tws_is_unknown_side() + app_tws_is_right_side();
+    stdf_sdk_api_earside_t earside_new = stdf_sdk_api_get_earside();
     
     STDF_SDK_API_LOG("earside %d -> %d", earside_old, earside_new);
 }
 
+/*******************************************************************************
+ * @fn      .
+ * @brief   .
+ * @param   .
+ * @return  .
+ * @notice  .
+ */
+stdf_sdk_api_earside_t stdf_sdk_api_get_earside(void)
+{
+    return !app_tws_is_unknown_side() + app_tws_is_right_side();
+}
 
 /*******************************************************************************
 *******************************************************************************/
