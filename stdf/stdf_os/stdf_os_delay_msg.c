@@ -30,7 +30,7 @@
 #define STDF_OS_DELAY_MSG_IMMEDIATELY       0 // immediately
 
 // Maximum number of pendding message
-#define STDF_OS_DELAY_MSG_MAX_NUM           30 
+#define STDF_OS_DELAY_MSG_MAX_NUM           20 
 
 #define STDF_OS_DELAY_MSG_ENTER_CRITICAL()  osMutexWait(stdf_os_delay_msg_mutex_id, osWaitForever)
 #define STDF_OS_DELAY_MSG_EXIT_CRITICAL()   osMutexRelease(stdf_os_delay_msg_mutex_id) 

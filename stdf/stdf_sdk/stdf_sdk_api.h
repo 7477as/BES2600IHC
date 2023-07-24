@@ -71,6 +71,7 @@ void stdf_sdk_api_enter_freeman_pairing(void);
 
 void stdf_sdk_api_init_earside(void);
 stdf_sdk_api_earside_t stdf_sdk_api_get_earside(void);
+void stdf_sdk_api_log_info(void);
 
 /*******************************************************************************
 *******************************************************************************/

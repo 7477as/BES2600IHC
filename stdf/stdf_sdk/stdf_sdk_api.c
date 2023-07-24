@@ -22,6 +22,7 @@
 #include "app_ibrt_ui.h"
 #include "app_tws_if.h"
 #include "factory_section.h"
+#include "heap_api.h"
 
 /*******************************************************************************
  * MACROS
@@ -313,6 +314,20 @@ void stdf_sdk_api_init_earside(void)
 stdf_sdk_api_earside_t stdf_sdk_api_get_earside(void)
 {
     return !app_tws_is_unknown_side() + app_tws_is_right_side();
+}
+
+/*******************************************************************************
+ * @fn      .
+ * @brief   .
+ * @param   .
+ * @return  .
+ * @notice  .
+ */
+void stdf_sdk_api_log_info(void)
+{
+    size_t total = 8, used = 8, max_used = 8;
+    med_memory_info(&total, &used, &max_used);
+    STDF_SDK_API_LOG("total %d used %d max_used %d", total, used, max_used);
 }
 
 /*******************************************************************************

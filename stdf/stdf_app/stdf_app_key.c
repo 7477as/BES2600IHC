@@ -18,12 +18,14 @@
 #include "stdf_bsp_key.h"
 #include "stdf_define.h" 
 #include "stdf_os.h"
+#include "stdf_sdk_api.h"
 
 /*******************************************************************************
  * MACROS
  */
 #define STDF_APP_KEY_MFB                    STDF_BSP_KEY_NUM_1
-#define STDF_APP_KEY_MFB_MASKS              ((1 << STDF_BSP_KEY_EVENT_DOUBLE_CLICK) | \
+#define STDF_APP_KEY_MFB_MASKS              ((1 << STDF_BSP_KEY_EVENT_SINGLE_CLICK) | \
+                                             (1 << STDF_BSP_KEY_EVENT_DOUBLE_CLICK) | \
                                              (1 << STDF_BSP_KEY_EVENT_TRIPLE_CLICK) | \
                                              (1 << STDF_BSP_KEY_EVENT_LONG_PRESS) | \
                                              (1 << STDF_BSP_KEY_EVENT_LONG_LONG_PRESS))
@@ -61,6 +63,10 @@ static void stdf_app_key_event_callback(stdf_bsp_key_num_t key_num,
     
     switch(event)
     {
+        case STDF_BSP_KEY_EVENT_SINGLE_CLICK:
+            stdf_sdk_api_log_info();
+            break;
+
         case STDF_BSP_KEY_EVENT_DOUBLE_CLICK:
             break;
             

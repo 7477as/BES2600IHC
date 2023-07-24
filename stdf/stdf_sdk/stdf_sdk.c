@@ -17,6 +17,7 @@
  */
 #include "stdf_define.h"
 #include "stdf_sdk.h"
+#include "stdf_sdk_api.h"
 
 /*******************************************************************************
  * MACROS
@@ -49,7 +50,7 @@
  */
 void stdf_sdk_init(void)
 {
-
+    stdf_sdk_api_init_earside();
 }
 
 /*******************************************************************************

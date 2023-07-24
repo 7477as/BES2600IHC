@@ -13,9 +13,10 @@ subdir-ccflags-y += \
     -Iservices/multimedia/audio/codec/sbc/inc \
     -Iservices/nv_section/factory_section \
     -Iservices/tws_ibrt/inc \
-    -Iutils/cqueue
-    
-    
+    -Iutils/cqueue \
+    -Iutils/heap
+
+
 #stdf include
 subdir-ccflags-y += \
     -Iconfig/$(T) \

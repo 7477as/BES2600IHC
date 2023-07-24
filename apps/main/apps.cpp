@@ -1971,7 +1971,7 @@ int app_init(void)
 #endif
 
 #ifdef __STDF__
-    stdf_init_fast();
+    stdf_init();
 #endif
 
     btdrv_start_bt();
@@ -2224,7 +2224,7 @@ exit:
 #endif
 
 #if defined(__STDF__)
-    stdf_init();
+    //stdf_init();
 #endif
     
     app_sysfreq_req(APP_SYSFREQ_USER_APP_INIT, APP_SYSFREQ_32K);
