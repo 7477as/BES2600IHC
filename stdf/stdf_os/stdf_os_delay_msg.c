@@ -21,6 +21,7 @@
 
 #include "stdf_define.h"
 #include "stdf_os_config.h"
+#include "stdf_os_msg.h"
 #include "stdf_os_delay_msg.h"
 
 /*******************************************************************************
@@ -32,7 +33,7 @@
 // Maximum number of pendding message
 #define STDF_OS_DELAY_MSG_MAX_NUM           20 
 
-#define STDF_OS_DELAY_MSG_ENTER_CRITICAL()  osMutexWait(stdf_os_delay_msg_mutex_id, osWaitForever)
+#define STDF_OS_DELAY_MSG_ENTER_CRITICAL()  STDF_ASSERT(osMutexWait(stdf_os_delay_msg_mutex_id, 500) == osOK)
 #define STDF_OS_DELAY_MSG_EXIT_CRITICAL()   osMutexRelease(stdf_os_delay_msg_mutex_id) 
 
 #define STDF_OS_DELAY_MSG_LOG(str, ...)     STDF_LOG("[OS][DMSG] %s "str, __func__, ##__VA_ARGS__)
@@ -248,8 +249,8 @@ static void stdf_os_delay_msg_timer_timeout(void)
     stdf_os_delay_msg_deinit(latest_index);
     STDF_OS_DELAY_MSG_EXIT_CRITICAL();
     if(handler != NULL)
-    {     
-        handler(msg_id, payload);   
+    {
+        stdf_os_msg_mailbox_put(handler, msg_id, payload);
     }
 
     // check if other handle need to call
@@ -276,8 +277,8 @@ static void stdf_os_delay_msg_timer_timeout(void)
         if(index < STDF_OS_DELAY_MSG_MAX_NUM)
         {            
             if(handler != NULL)
-            {             
-                handler(msg_id, payload);
+            {
+                stdf_os_msg_mailbox_put(handler, msg_id, payload);
             }
         }
     }         

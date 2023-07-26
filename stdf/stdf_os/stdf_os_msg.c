@@ -29,7 +29,7 @@
 #define STDF_OS_MSG_ASSERT(cond)            STDF_ASSERT(cond)
 
 #define STDF_OS_MSG_THREAD_STACK_SIZE      (1024 * 4)
-#define STDF_OS_MSG_MAILBOX_MAX            (20)
+#define STDF_OS_MSG_MAILBOX_MAX            (30)
 
 /*******************************************************************************
  * TYPEDEFS
