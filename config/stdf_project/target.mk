@@ -209,9 +209,9 @@ VOICE_PROMPT ?= 1
 
 BLE ?= 1
 export BLE_PERIPHERAL_ONLY ?= 0
-export GFPS_ENABLE ?= 1
+export GFPS_ENABLE ?= 0
 
-TOTA ?= 0
+TOTA ?= 1
 
 TOTA_v2 ?= 0
 
