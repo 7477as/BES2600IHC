@@ -74,6 +74,7 @@ static void stdf_app_key_event_callback(stdf_bsp_key_num_t key_num,
             break;
             
         case STDF_BSP_KEY_EVENT_LONG_PRESS:
+            stdf_sdk_api_enter_tws_pairing();
             break;
             
         case STDF_BSP_KEY_EVENT_LONG_LONG_PRESS:
