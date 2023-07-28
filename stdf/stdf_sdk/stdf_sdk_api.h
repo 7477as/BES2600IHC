@@ -45,6 +45,15 @@ typedef enum
 /*******************************************************************************
  * FUNCTIONS
  */
+
+/* -----------------------------------------------------------------------------
+ *                                   System
+ * ---------------------------------------------------------------------------*/
+
+void stdf_sdk_api_sys_delay_ms(uint32_t ms);
+void stdf_sdk_api_sys_power_off(void);
+void stdf_sdk_api_sys_reset(void);
+
 /* -----------------------------------------------------------------------------
  *                                   PHY
  * ---------------------------------------------------------------------------*/
@@ -64,6 +73,16 @@ void stdf_sdk_api_phy_set_state_in_ear(void);
 
 void stdf_sdk_api_enter_tws_pairing(void);
 void stdf_sdk_api_enter_freeman_pairing(void);
+
+bool stdf_sdk_api_is_tws_pairing(void);
+bool stdf_sdk_api_is_bt_pairing(void);
+bool stdf_sdk_api_is_tws_connected(void);
+bool stdf_sdk_api_is_bt_connected(void);
+
+bool stdf_sdk_api_is_role_unkouwn(void);
+bool stdf_sdk_api_is_role_master(void);
+
+uint8_t* stdf_sdk_api_read_bt_addr(void);
 
 /* -----------------------------------------------------------------------------
  *                                   misc

@@ -6,6 +6,7 @@ obj-y += stdf_bsp/key/
 subdir-ccflags-y += \
     -Iapps/key \
     -Iplatform/drivers/bt \
+    -Iplatform/drivers/ana \
     -Iplatform/hal/best1305 \
     -Iservices/app_tws/inc \
     -Iservices/bt_if_enhanced/inc \

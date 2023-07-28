@@ -20,9 +20,14 @@
 
 #include "app_ibrt_if.h"
 #include "app_ibrt_ui.h"
+#include "app_tws_besaud.h"
+#include "app_tws_ibrt.h"
 #include "app_tws_if.h"
+#include "cmsis_os.h"
 #include "factory_section.h"
+#include "hal_cmu.h"
 #include "heap_api.h"
+#include "pmu.h"
 
 /*******************************************************************************
  * MACROS
@@ -43,7 +48,6 @@
 /*******************************************************************************
 * GLOBAL VARIABLES
 */
-
 /*******************************************************************************
  * EXTERNAL VARIABLES
  */
@@ -51,6 +55,34 @@
 /*******************************************************************************
  * FUNCTIONS
  */
+
+/* -----------------------------------------------------------------------------
+ *                                   System
+ * ---------------------------------------------------------------------------*/
+
+/*******************************************************************************
+ * @brief   .
+ */
+void stdf_sdk_api_sys_delay_ms(uint32_t ms)
+{
+    osDelay(ms);
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+void stdf_sdk_api_sys_power_off(void)
+{
+    pmu_shutdown();
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+void stdf_sdk_api_sys_reset(void)
+{
+    hal_cmu_sys_reboot();
+}
 
 /* -----------------------------------------------------------------------------
  *                                   PHY
@@ -231,16 +263,13 @@ void stdf_sdk_api_phy_set_state_in_ear(void)
  * ---------------------------------------------------------------------------*/
 
 /*******************************************************************************
- * @fn      .
  * @brief   .
- * @param   .
- * @return  .
- * @notice  .
  */
 void stdf_sdk_api_enter_tws_pairing(void)
 {
     STDF_SDK_API_LOG("");
     
+#ifdef IBRT_SEARCH_UI
     if(app_tws_is_left_side())
     {
         app_ibrt_enter_limited_mode();
@@ -254,19 +283,78 @@ void stdf_sdk_api_enter_tws_pairing(void)
     {
         STDF_SDK_API_LOG("unknown earside exit tws pairing!!!");
     }
+#endif
 }
 
 /*******************************************************************************
- * @fn      .
  * @brief   .
- * @param   .
- * @return  .
- * @notice  .
  */
 void stdf_sdk_api_enter_freeman_pairing(void)
 {
-    //app_ibrt_ui_event_entry(IBRT_NONE_EVENT);
     app_ibrt_if_enter_freeman_pairing();
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+bool stdf_sdk_api_is_tws_pairing(void)
+{
+	ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
+    return (p_ibrt_ctrl->access_mode == BTIF_BAM_LIMITED_ACCESSIBLE);
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+bool stdf_sdk_api_is_bt_pairing(void)
+{
+	ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
+    return (p_ibrt_ctrl->access_mode == BTIF_BAM_GENERAL_ACCESSIBLE);
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+bool stdf_sdk_api_is_tws_connected(void)
+{
+    return tws_besaud_is_connected();
+	//return app_tws_ibrt_tws_link_connected();
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+bool stdf_sdk_api_is_bt_connected(void)
+{
+    return app_tws_ibrt_mobile_link_connected();
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+bool stdf_sdk_api_is_role_unkouwn(void)
+{
+    ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
+    return (p_ibrt_ctrl->current_role == IBRT_UNKNOW);
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+bool stdf_sdk_api_is_role_master(void)
+{
+    ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
+    return (p_ibrt_ctrl->current_role == IBRT_MASTER);
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+uint8_t* stdf_sdk_api_read_bt_addr(void)
+{
+    uint8_t *addr = factory_section_get_bt_address();
+    STDF_SDK_API_ASSERT(addr != NULL);
+    return addr;
 }
 
 /* -----------------------------------------------------------------------------
@@ -286,10 +374,10 @@ void stdf_sdk_api_init_earside(void)
     
     // GPIO level is low means right side while high means left side
 #if defined(STDF_SDK_API_EARSIDE_USE_GPIO)
-    
+
     // BT addr last bit is Odd means right side while even means left side.
 #elif defined(STDF_SDK_API_EARSIDE_USE_BT_ADDR)
-    uint8_t *addr = factory_section_get_bt_address();
+    uint8_t *addr = stdf_sdk_api_read_bt_addr();
     app_tws_set_side_from_addr(addr);
     
     // Read the ear side flag form flash that the factory ATE whited.

@@ -759,8 +759,12 @@ int app_ibrt_customif_ui_start(void)
     //pairing mode default value, default should be set false
     config.enter_pairing_mode                       = false;
 
+#ifdef __STDF__
+    config.enter_pairing_on_empty_mobile_addr       = true;
+#else
     //for some proj no box key, default should be false;
     config.enter_pairing_on_empty_mobile_addr       = false;
+#endif
 
     //for some proj no box key, default should be false
     config.enter_pairing_on_reconnect_mobile_failed = true;

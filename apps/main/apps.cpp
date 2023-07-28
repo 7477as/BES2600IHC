@@ -1643,7 +1643,11 @@ void app_ibrt_init(void)
         app_ibrt_ui_init_after_customif_ui_start();
 #ifdef IBRT_SEARCH_UI
         app_tws_ibrt_start(&config, true);
+#ifdef __STDF
+        do nothing
+#else
         app_ibrt_search_ui_init(false,IBRT_NONE_EVENT);
+#endif
 #else
         app_tws_ibrt_start(&config, false);
 #endif
