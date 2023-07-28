@@ -104,8 +104,10 @@ static void stdf_app_protocal_receive_data_handler(uint8_t *buf, uint16_t length
     }
     // The left earside can process left side command only, and the same as right earside.
     // The unkown earside can process all kind of commands depend on the application layer.
-    else if((earside == STDF_SDK_API_EAR_SIDE_LEFT  && buf[3] != STDF_APP_PROTOCAL_FRAME_HEAD3_L) ||
-            (earside == STDF_SDK_API_EAR_SIDE_RIGHT && buf[3] != STDF_APP_PROTOCAL_FRAME_HEAD3_R))
+    else if((earside == STDF_SDK_API_EAR_SIDE_LEFT  && buf[3] == STDF_APP_PROTOCAL_FRAME_HEAD3_R) ||
+            (earside == STDF_SDK_API_EAR_SIDE_RIGHT && buf[3] == STDF_APP_PROTOCAL_FRAME_HEAD3_L) ||
+            (buf[3] < STDF_APP_PROTOCAL_FRAME_HEAD3_LR) || 
+            (buf[3] > STDF_APP_PROTOCAL_FRAME_HEAD3_R))
     {
         STDF_APP_PROTOCAL_LOG("not sent to me");
         return;
