@@ -1643,8 +1643,8 @@ void app_ibrt_init(void)
         app_ibrt_ui_init_after_customif_ui_start();
 #ifdef IBRT_SEARCH_UI
         app_tws_ibrt_start(&config, true);
-#ifdef __STDF
-        do nothing
+#ifdef __STDF__
+        // do nothing
 #else
         app_ibrt_search_ui_init(false,IBRT_NONE_EVENT);
 #endif
@@ -1783,6 +1783,10 @@ int app_init(void)
 
 #ifdef BTADDR_FOR_DEBUG
     gen_bt_addr_for_debug();
+#endif
+
+#ifdef __STDF__
+    stdf_init_fast();
 #endif
 
 #ifdef FORCE_SIGNALINGMODE

@@ -58,5 +58,6 @@ subdir-ccflags-y += -Ithirdparty/audio_codec_lib/ldac/inc
 endif
 
 ifeq ($(__STDF__),1)
-subdir-ccflags-y += -Istdf/stdf_main
+subdir-ccflags-y += -Istdf/stdf_main \
+                    -Istdf/stdf_sdk
 endif

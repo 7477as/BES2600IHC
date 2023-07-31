@@ -47,6 +47,7 @@
 void stdf_sdk_cb_5v_plug_in(void)
 {
     STDF_SDK_CB_LOG("");
+    stdf_sdk_api_phy_set_state_in_case_close();
 }
 
 /*******************************************************************************

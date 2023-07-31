@@ -57,8 +57,6 @@ void stdf_init(void)
 {
     STDF_LOG("stdf_init");
 
-    stdf_os_init();
-
     stdf_sdk_init();
     
     stdf_hal_init();
@@ -66,6 +64,20 @@ void stdf_init(void)
     stdf_bsp_init();
 
     stdf_app_init();
+}
+
+/*******************************************************************************
+ * @fn      .
+ * @brief   .
+ * @param   .
+ * @return  .
+ * @notice  .
+ */
+void stdf_init_fast(void)
+{
+    STDF_LOG("stdf_init_fast");
+    
+    stdf_os_init();
 }
 
 /*******************************************************************************

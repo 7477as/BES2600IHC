@@ -16,6 +16,7 @@
  * INCLUDES
  */
 #include "stdf_define.h"
+#include "stdf_os.h"
 #include "stdf_sdk_api.h"
 
 #include "app_ibrt_if.h"
@@ -25,9 +26,11 @@
 #include "app_tws_if.h"
 #include "cmsis_os.h"
 #include "factory_section.h"
+#include "hal_bootmode.h"
 #include "hal_cmu.h"
 #include "heap_api.h"
 #include "pmu.h"
+#include "nvrecord_bt.h"
 
 /*******************************************************************************
  * MACROS
@@ -48,6 +51,8 @@
 /*******************************************************************************
 * GLOBAL VARIABLES
 */
+stdf_sdk_api_power_reason_t stdf_sdk_api_power_reason = STDF_SDK_API_POWER_REASON_UNKOWN;
+
 /*******************************************************************************
  * EXTERNAL VARIABLES
  */
@@ -85,8 +90,105 @@ void stdf_sdk_api_sys_reset(void)
 }
 
 /* -----------------------------------------------------------------------------
+ *                                   power on/off
+ * ---------------------------------------------------------------------------*/
+
+void stdf_sdk_api_power_reason_init(void)
+{
+    uint32_t bootmode = hal_sw_bootmode_get();
+    stdf_sdk_api_power_reason_t power_reason;
+    
+    if (bootmode & STDF_SDK_API_BOOTMODE_TWS_PAIRING)
+    {
+        hal_sw_bootmode_clear(STDF_SDK_API_BOOTMODE_TWS_PAIRING);
+        power_reason = STDF_SDK_API_POWER_REASON_TWS_PAIRING;
+    }
+    else if (bootmode & STDF_SDK_API_BOOTMODE_FREEMAN_PAIRING)
+    {
+        hal_sw_bootmode_clear(STDF_SDK_API_BOOTMODE_FREEMAN_PAIRING);
+        power_reason = STDF_SDK_API_POWER_REASON_FREEMAN_PAIRING;
+    }
+    else
+    {
+        power_reason = STDF_SDK_API_POWER_REASON_NORMAL;
+    }
+
+    STDF_SDK_API_LOG("bootmode %x power_reason %d", bootmode, power_reason);
+
+    stdf_sdk_api_power_reason_set(power_reason);
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+stdf_sdk_api_power_reason_t stdf_sdk_api_power_reason_get(void)
+{
+    return stdf_sdk_api_power_reason;
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+void stdf_sdk_api_power_reason_set(stdf_sdk_api_power_reason_t reason)
+{
+    if(reason != stdf_sdk_api_power_reason)
+    {
+        STDF_SDK_API_LOG("reason %d -> %d", stdf_sdk_api_power_reason, reason);
+        stdf_sdk_api_power_reason = reason;
+    }
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+void stdf_sdk_api_power_reason_check(void)
+{
+    STDF_SDK_API_LOG("reason %d", stdf_sdk_api_power_reason);
+    
+    switch(stdf_sdk_api_power_reason)
+    {
+        case STDF_SDK_API_POWER_REASON_NORMAL:
+            break;
+        
+        case STDF_SDK_API_POWER_REASON_TWS_PAIRING:
+            stdf_sdk_api_enter_tws_pairing();
+            break;
+        
+        case STDF_SDK_API_POWER_REASON_FREEMAN_PAIRING:
+            stdf_sdk_api_enter_freeman_pairing();
+            break;
+
+        default:
+            break;
+    }
+}
+
+/* -----------------------------------------------------------------------------
  *                                   PHY
  * ---------------------------------------------------------------------------*/
+
+/*******************************************************************************
+ * @brief   .
+ */
+static void stdf_sdk_api_phy_init_msg_handler(stdf_os_msg_id_t msg_id, void *payload)
+{
+    enum PMU_CHARGER_STATUS_T status = pmu_charger_get_status();
+
+    STDF_SDK_API_LOG("status %d", status);
+    
+    if(status != PMU_CHARGER_PLUGIN)
+    {
+        stdf_sdk_api_phy_set_state_in_case_open();
+    }
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+void stdf_sdk_api_phy_init_state(void)
+{
+    MessageSendLater(stdf_sdk_api_phy_init_msg_handler, 0x00, NULL, 1000);
+}
 
 /*******************************************************************************
  * @brief   .
@@ -160,12 +262,14 @@ void stdf_sdk_api_phy_set_state_in_case_close(void)
     if(box_state == IBRT_BOX_UNKNOWN)
     {
         STDF_SDK_API_LOG("init!!!");
-        app_ibrt_ui_event_entry(IBRT_CLOSE_BOX_EVENT);    
+        app_ibrt_ui_event_entry(IBRT_CLOSE_BOX_EVENT);
+        stdf_sdk_api_power_reason_set(STDF_SDK_API_POWER_REASON_NORMAL);
     }
     else if((box_state_future == IBRT_IN_BOX_OPEN) || 
         ((box_state_future != IBRT_IN_BOX_OPEN) && (box_state == IBRT_IN_BOX_OPEN)))
     {
-        app_ibrt_ui_event_entry(IBRT_CLOSE_BOX_EVENT);    
+        app_ibrt_ui_event_entry(IBRT_CLOSE_BOX_EVENT); 
+        stdf_sdk_api_power_reason_set(STDF_SDK_API_POWER_REASON_NORMAL);
     }
     else
     {
@@ -190,7 +294,14 @@ void stdf_sdk_api_phy_set_state_in_case_open(void)
     else if((box_state_future == IBRT_IN_BOX_CLOSED) || 
         ((box_state_future != IBRT_IN_BOX_CLOSED) && (box_state == IBRT_IN_BOX_CLOSED)))
     {
-        app_ibrt_ui_event_entry(IBRT_OPEN_BOX_EVENT);    
+        if(stdf_sdk_api_power_reason_get() == STDF_SDK_API_POWER_REASON_NORMAL)
+        {
+            app_ibrt_ui_event_entry(IBRT_OPEN_BOX_EVENT);
+        }
+        else
+        {
+            stdf_sdk_api_power_reason_check();
+        }
     }
     else if((box_state_future == IBRT_OUT_BOX) || 
         ((box_state_future != IBRT_OUT_BOX) && (box_state == IBRT_OUT_BOX)))
@@ -289,9 +400,30 @@ void stdf_sdk_api_enter_tws_pairing(void)
 /*******************************************************************************
  * @brief   .
  */
+void stdf_sdk_api_reset_enter_tws_pairing(void)
+{
+    STDF_SDK_API_LOG("");
+    hal_sw_bootmode_set(STDF_SDK_API_BOOTMODE_TWS_PAIRING);
+    stdf_sdk_api_sys_reset();
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
 void stdf_sdk_api_enter_freeman_pairing(void)
 {
+    STDF_SDK_API_LOG("");
     app_ibrt_if_enter_freeman_pairing();
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+void stdf_sdk_api_reset_enter_freeman_pairing(void)
+{
+    STDF_SDK_API_LOG("");
+    hal_sw_bootmode_set(STDF_SDK_API_BOOTMODE_FREEMAN_PAIRING);
+    stdf_sdk_api_sys_reset();
 }
 
 /*******************************************************************************
@@ -355,6 +487,46 @@ uint8_t* stdf_sdk_api_read_bt_addr(void)
     uint8_t *addr = factory_section_get_bt_address();
     STDF_SDK_API_ASSERT(addr != NULL);
     return addr;
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+void stdf_sdk_api_delate_tws_record(void)
+{
+    btif_device_record_t record = {0};
+    int paired_dev_count = nv_record_get_paired_dev_count();
+
+    for (int i = paired_dev_count - 1; i >= 0; --i)
+    {
+        nv_record_enum_dev_records(i, &record);
+
+        if (TWS_LINK == app_tws_ibrt_get_link_type_by_addr(&record.bdAddr))
+        {
+            nv_record_ddbrec_delete(&record.bdAddr);
+        }
+    }
+    app_ibrt_if_config_keeper_clear();
+}
+
+/*******************************************************************************
+ * @brief   .
+ */
+void stdf_sdk_api_delate_all_bt_record(void)
+{
+    btif_device_record_t record = {0};
+    int paired_dev_count = nv_record_get_paired_dev_count();
+
+    for (int i = paired_dev_count - 1; i >= 0; --i)
+    {
+        nv_record_enum_dev_records(i, &record);
+
+        if (MOBILE_LINK == app_tws_ibrt_get_link_type_by_addr(&record.bdAddr))
+        {
+            nv_record_ddbrec_delete(&record.bdAddr);
+        }
+    }
+    app_ibrt_if_config_keeper_clear();
 }
 
 /* -----------------------------------------------------------------------------

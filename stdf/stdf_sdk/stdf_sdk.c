@@ -50,7 +50,14 @@
  */
 void stdf_sdk_init(void)
 {
+    // init easide by bluetooth address, gpio or flash value
     stdf_sdk_api_init_earside();
+    
+    // what the power reason before power on
+    stdf_sdk_api_power_reason_init();
+    
+    // set the default phy state for power on
+    stdf_sdk_api_phy_init_state();
 }
 
 /*******************************************************************************
