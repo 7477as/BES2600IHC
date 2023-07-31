@@ -107,7 +107,9 @@ static void stdf_app_ccp_1wire_download(uint8_t *data, uint16_t length)
 static void stdf_app_ccp_tws_pairing(uint8_t *data, uint16_t length)
 {
     stdf_app_protocal_response(NULL, 0, STDF_APP_PROTOCAL_ACK_SUCCESS);
-    stdf_sdk_api_sys_delay_ms(50);
+    
+    // Wait the response sent complete.
+    stdf_sdk_api_sys_delay_ms(20);
     stdf_sdk_api_reset_enter_tws_pairing();
 }
 
@@ -125,7 +127,9 @@ static void stdf_app_ccp_bt_pairing(uint8_t *data, uint16_t length)
 static void stdf_app_ccp_freeman_pairing(uint8_t *data, uint16_t length)
 {
     stdf_app_protocal_response(NULL, 0, STDF_APP_PROTOCAL_ACK_SUCCESS);
-    stdf_sdk_api_sys_delay_ms(50);
+    
+    // Wait the response sent complete.
+    stdf_sdk_api_sys_delay_ms(20);
     stdf_sdk_api_reset_enter_freeman_pairing();
 }
 
@@ -137,8 +141,8 @@ static void stdf_app_ccp_reset_factory_settings(uint8_t *data, uint16_t length)
     stdf_app_protocal_response(NULL, 0, STDF_APP_PROTOCAL_ACK_SUCCESS);
     
     // Wait the response sent complete.
+    stdf_sdk_api_sys_delay_ms(20);
     stdf_sdk_api_sys_reset();
-    stdf_sdk_api_sys_delay_ms(50);
 }
 
 /*******************************************************************************
@@ -168,7 +172,7 @@ static void stdf_app_ccp_power_off(uint8_t *data, uint16_t length)
     stdf_app_protocal_response(NULL, 0, STDF_APP_PROTOCAL_ACK_SUCCESS);
     
     // Wait the response sent complete.
-    stdf_sdk_api_sys_delay_ms(50);
+    stdf_sdk_api_sys_delay_ms(20);
     stdf_sdk_api_sys_power_off();
 }
 
