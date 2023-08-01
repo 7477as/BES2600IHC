@@ -99,6 +99,7 @@ static void stdf_app_ccp_case_close(uint8_t *data, uint16_t length)
 static void stdf_app_ccp_1wire_download(uint8_t *data, uint16_t length)
 {
     stdf_app_protocal_response(NULL, 0, STDF_APP_PROTOCAL_ACK_SUCCESS);
+    stdf_sdk_api_sys_reset_enter_1wire_download();
 }
 
 /*******************************************************************************

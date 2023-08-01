@@ -63,6 +63,7 @@ typedef enum
 void stdf_sdk_api_sys_delay_ms(uint32_t ms);
 void stdf_sdk_api_sys_power_off(void);
 void stdf_sdk_api_sys_reset(void);
+void stdf_sdk_api_sys_reset_enter_1wire_download(void);
 
 /* -----------------------------------------------------------------------------
  *                                   power on/off

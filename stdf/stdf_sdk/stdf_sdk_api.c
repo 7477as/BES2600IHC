@@ -89,6 +89,16 @@ void stdf_sdk_api_sys_reset(void)
     hal_cmu_sys_reboot();
 }
 
+/*******************************************************************************
+ * @brief   .
+ */
+void stdf_sdk_api_sys_reset_enter_1wire_download(void)
+{
+    hal_sw_bootmode_clear(HAL_SW_BOOTMODE_REBOOT);
+    hal_sw_bootmode_set(HAL_SW_BOOTMODE_SINGLE_LINE_DOWNLOAD);
+    stdf_sdk_api_sys_reset();
+}
+
 /* -----------------------------------------------------------------------------
  *                                   power on/off
  * ---------------------------------------------------------------------------*/
