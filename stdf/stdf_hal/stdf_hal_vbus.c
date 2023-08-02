@@ -38,7 +38,7 @@
 #define STDF_HAL_VBUS_RECV_BUF_LEN          (512)
 #define STDF_HAL_VBUS_BAUT_RATE             (10000)
 
-#define STDF_HAL_VBUS_LOG(str, ...)         STDF_LOG("[HAL] %s "str, __func__, ##__VA_ARGS__)
+#define STDF_HAL_VBUS_LOG(str, ...)         STDF_LOG("[HAL][VBUS] %s "str, __func__, ##__VA_ARGS__)
 #define STDF_HAL_VBUS_ASSERT(cond)          STDF_ASSERT(cond)
 
 /*******************************************************************************

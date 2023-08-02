@@ -188,7 +188,7 @@ void stdf_app_protocal_response(uint8_t *data, uint16_t length, stdf_app_protoca
     *response_buf++ = STDF_APP_PROTOCAL_FRAME_FCS_DEFAULT;
     *response_buf   = STDF_APP_PROTOCAL_FRAME_FCS_DEFAULT;
 
-    length += STDF_APP_PROTOCAL_MIN_BUF_SIZE;
+    length += STDF_APP_PROTOCAL_MIN_BUF_SIZE + 1; // + ack 1 bytes
     STDF_APP_PROTOCAL_LOG("=> length %d", length);
     STDF_DUMP8("%02X ", stdf_app_protocal_response_buf, length);
     stdf_hal_vbus_send(stdf_app_protocal_response_buf, length);
