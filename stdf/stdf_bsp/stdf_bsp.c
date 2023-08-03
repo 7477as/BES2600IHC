@@ -17,6 +17,9 @@
  */
 #include "stdf_define.h" 
 #include "stdf_bsp.h"
+#ifdef __STDF_EXTERNAL_CHAGER_ENABLE__
+#include "stdf_bsp_charger.h"
+#endif
 #include "stdf_bsp_key.h"
 
 /*******************************************************************************
@@ -50,6 +53,10 @@
  */
 void stdf_bsp_init(void)
 {
+#ifdef __STDF_EXTERNAL_CHAGER_ENABLE__
+    stdf_bsp_charger_init();
+#endif
+    
     stdf_bsp_key_init();
 }
 

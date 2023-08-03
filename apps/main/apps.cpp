@@ -1831,6 +1831,15 @@ int app_init(void)
 #ifdef BT_USB_AUDIO_DUAL_MODE
     usb_os_init();
 #endif
+
+#ifdef __STDF_EXTERNAL_CHAGER_ENABLE__
+    need_check_key = false;
+    nRet = 0;
+#ifdef IBRT_SEARCH_UI
+    is_charging_poweron = false; // default not enter tws pairing
+#endif
+#else /* __STDF_EXTERNAL_CHAGER_ENABLE__ */
+
     nRet = app_battery_open();
     TRACE(1,"BATTERY %d",nRet);
     if (pwron_case != APP_POWERON_CASE_TEST){
@@ -1868,6 +1877,7 @@ int app_init(void)
                 break;
         }
     }
+#endif /* __STDF_EXTERNAL_CHAGER_ENABLE__ */
 
     if (app_key_open(need_check_key)){
         TRACE(0,"PWR KEY DITHER!");

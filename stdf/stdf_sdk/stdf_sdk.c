@@ -55,9 +55,12 @@ void stdf_sdk_init(void)
     
     // what the power reason before power on
     stdf_sdk_api_power_reason_init();
-    
+
+#ifdef __STDF_HAL_PMU_ENABLE__
+#else
     // set the default phy state for power on
     stdf_sdk_api_phy_init_state();
+#endif
 }
 
 /*******************************************************************************

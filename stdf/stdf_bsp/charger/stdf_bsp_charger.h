@@ -12,29 +12,25 @@
 
 *******************************************************************************/
 
+#ifndef __STDF_BSP_CHARGER_H__
+#define __STDF_BSP_CHARGER_H__
+
 /*******************************************************************************
  * INCLUDES
  */
-#include "stdf_define.h" 
-#include "stdf_hal.h"
-#ifdef __STDF_HAL_PMU_ENABLE__
-#include "stdf_hal_pmu.h"
+#include "plat_types.h"
+
+#ifdef __cplusplus
+extern "C" {
 #endif
-#include "stdf_hal_vbus.h"
 
 /*******************************************************************************
  * MACROS
  */
-#define STDF_HAL_LOG(str, ...)              STDF_LOG("[HAL] %s "str, __func__, ##__VA_ARGS__)
-#define STDF_HAL_ASSERT(cond)               STDF_ASSERT(cond)
 
 /*******************************************************************************
  * TYPEDEFS
  */
-
-/*******************************************************************************
-* GLOBAL VARIABLES
-*/
 
 /*******************************************************************************
  * EXTERNAL VARIABLES
@@ -43,23 +39,13 @@
 /*******************************************************************************
  * FUNCTIONS
  */
-
-/*******************************************************************************
- * @fn      .
- * @brief   .
- * @param   .
- * @return  .
- * @notice  .
- */
-void stdf_hal_init(void)
-{
-    stdf_hal_vbus_init();
-    
-#ifdef __STDF_HAL_PMU_ENABLE__
-    stdf_hal_pmu_init();
-#endif
-}
+void stdf_bsp_charger_init(void);
 
 /*******************************************************************************
 *******************************************************************************/
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif

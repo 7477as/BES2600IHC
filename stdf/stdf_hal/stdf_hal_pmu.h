@@ -12,29 +12,29 @@
 
 *******************************************************************************/
 
+#ifndef __STDF_HAL_PMU_H__
+#define __STDF_HAL_PMU_H__
+
+#ifdef __STDF_HAL_PMU_ENABLE__
+
 /*******************************************************************************
  * INCLUDES
  */
-#include "stdf_define.h" 
-#include "stdf_hal.h"
-#ifdef __STDF_HAL_PMU_ENABLE__
-#include "stdf_hal_pmu.h"
+#include "plat_types.h"
+
+#ifdef __cplusplus
+extern "C" {
 #endif
-#include "stdf_hal_vbus.h"
 
 /*******************************************************************************
  * MACROS
  */
-#define STDF_HAL_LOG(str, ...)              STDF_LOG("[HAL] %s "str, __func__, ##__VA_ARGS__)
-#define STDF_HAL_ASSERT(cond)               STDF_ASSERT(cond)
 
 /*******************************************************************************
  * TYPEDEFS
  */
-
-/*******************************************************************************
-* GLOBAL VARIABLES
-*/
+// The standard callback charger plug in/out event
+typedef void (*stdf_hal_pmu_callback_t)(bool plug_in);
 
 /*******************************************************************************
  * EXTERNAL VARIABLES
@@ -43,23 +43,17 @@
 /*******************************************************************************
  * FUNCTIONS
  */
-
-/*******************************************************************************
- * @fn      .
- * @brief   .
- * @param   .
- * @return  .
- * @notice  .
- */
-void stdf_hal_init(void)
-{
-    stdf_hal_vbus_init();
-    
-#ifdef __STDF_HAL_PMU_ENABLE__
-    stdf_hal_pmu_init();
-#endif
-}
+void stdf_hal_pmu_init(void);
+void stdf_hal_pmu_register_callback(stdf_hal_pmu_callback_t callback);
+bool stdf_hal_pmu_is_plug_in(void);
 
 /*******************************************************************************
 *******************************************************************************/
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __STDF_HAL_PMU_ENABLE__ */
+
+#endif /* __STDF_HAL_PMU_H__ */

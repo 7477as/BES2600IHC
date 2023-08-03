@@ -30,3 +30,11 @@ subdir-ccflags-y += \
     -Istdf/stdf_os \
     -Istdf/stdf_sdk
 
+ifeq ($(__STDF_EXTERNAL_CHAGER_ENABLE__),1)
+obj-y += stdf_bsp/charger/ stdf_bsp/charger/sy5501/ stdf_bsp/charger/able_iic/
+
+subdir-ccflags-y += \
+    -Istdf/stdf_bsp/charger \
+    -Istdf/stdf_bsp/charger/able_iic \
+    -Istdf/stdf_bsp/charger/sy5501
+endif
