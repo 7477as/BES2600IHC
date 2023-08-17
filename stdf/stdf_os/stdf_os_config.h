@@ -35,6 +35,16 @@ extern "C" {
 // GMSG ID for communication
 #define STDF_OS_GMSG_ID_VBUS_RECEIVE_DATA   0x8000
 
+#define STDF_OS_GMSG_ID_CHG_PLUG_OUT        0x8010
+#define STDF_OS_GMSG_ID_CHG_PLUG_IN         0x8011
+#define STDF_OS_GMSG_ID_CASE_PLUG_OUT       0x8012
+#define STDF_OS_GMSG_ID_CASE_PLUG_IN        0x8013
+
+#define STDF_OS_GMSG_ID_PHY_IN_CASE_CLOSE   0x8020
+#define STDF_OS_GMSG_ID_PHY_IN_CASE_OPEN    0x8021
+#define STDF_OS_GMSG_ID_PHY_OUT_CASE_EAR    0x8022
+#define STDF_OS_GMSG_ID_PHY_IN_EAR          0x8023
+
 /*******************************************************************************
  * TYPEDEFS
  */

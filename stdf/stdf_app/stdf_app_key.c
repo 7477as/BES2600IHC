@@ -66,7 +66,7 @@ static void stdf_app_key_event_callback(stdf_bsp_key_num_t key_num,
         case STDF_BSP_KEY_EVENT_SINGLE_CLICK:
             stdf_sdk_api_log_info();
             break;
-
+            
         case STDF_BSP_KEY_EVENT_DOUBLE_CLICK:
             break;
             
@@ -74,7 +74,7 @@ static void stdf_app_key_event_callback(stdf_bsp_key_num_t key_num,
             break;
             
         case STDF_BSP_KEY_EVENT_LONG_PRESS:
-            stdf_sdk_api_enter_tws_pairing();
+            stdf_sdk_api_reset_enter_tws_pairing();
             break;
             
         case STDF_BSP_KEY_EVENT_LONG_LONG_PRESS:

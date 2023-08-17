@@ -16,6 +16,7 @@
  * INCLUDES
  */
 #include "stdf_app_ccp.h"
+#include "stdf_app_phy.h"
 #include "stdf_app_protocal.h"
 #include "stdf_define.h" 
 #include "stdf_sdk_api.h"
@@ -82,7 +83,7 @@ static void stdf_app_ccp_state(uint8_t *data, uint16_t length)
 static void stdf_app_ccp_case_open(uint8_t *data, uint16_t length)
 {
     STDF_APP_CCP_LOG("");
-    stdf_sdk_api_phy_set_state_in_case_open();
+    stdf_app_phy_event_case_open();
     stdf_app_protocal_response(NULL, 0, STDF_APP_PROTOCAL_ACK_SUCCESS);
 }
 
@@ -92,6 +93,7 @@ static void stdf_app_ccp_case_open(uint8_t *data, uint16_t length)
 static void stdf_app_ccp_case_close(uint8_t *data, uint16_t length)
 {
     STDF_APP_CCP_LOG("");
+    stdf_app_phy_event_case_close();
     stdf_app_protocal_response(NULL, 0, STDF_APP_PROTOCAL_ACK_SUCCESS);
 }
 
